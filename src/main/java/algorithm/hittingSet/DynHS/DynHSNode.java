@@ -1,8 +1,7 @@
-package algorithm.hittingSet.BHMMCS;
-
-import algorithm.hittingSet.NumSet;
+package algorithm.hittingSet.DynHS;
 
 import java.util.*;
+import util.Utils;
 
 public class DynHSNode {
 
@@ -89,7 +88,7 @@ public class DynHSNode {
 
 
     boolean insertSubsets(List<Long> newSubsets, Set<Long> rmvMinSubsets) {
-        List<Integer> eles = NumSet.indicesOfOnes(elements);
+        List<Integer> eles = Utils.indicesOfOnes(elements);
 
         for (int e : eles)
             crit.get(e).removeAll(rmvMinSubsets);

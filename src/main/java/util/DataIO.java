@@ -1,7 +1,7 @@
 package util;
 
 import algorithm.differenceSet.DiffConnector;
-import algorithm.hittingSet.BHMMCS.DynHSConnector;
+import algorithm.hittingSet.DynHS.DynHSConnector;
 import com.csvreader.CsvReader;
 
 import java.io.*;
@@ -39,39 +39,6 @@ public class DataIO {
         return res;
     }
 
-    public static HashMap<BitSet, BitSet> readAFD(String dsFilePath) {
-        List<String> lines = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(dsFilePath))) {
-            String s;
-            while ((s = br.readLine()) != null)
-                lines.add(s);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        HashMap<BitSet, BitSet> differnceSetAll = new HashMap<>();
-        int allTuplePair = 0;
-        for (String s : lines) {
-            int index = s.indexOf('-');
-            BitSet bitSet = new BitSet();
-            for (String str : s.substring(0, index).split(",")) {
-                if (str != null && str.length() > 0) bitSet.set(Integer.parseInt(str));
-            }
-            String last = s.substring(index + 2);
-            int index2 = last.indexOf(',');
-            int rhs = Integer.parseInt(last.substring(0,index2));
-            if(differnceSetAll.containsKey(bitSet)){
-                differnceSetAll.get(bitSet).set(rhs, true);
-            }else{
-                BitSet bitSet1 = new BitSet();
-                bitSet1.set(rhs);
-                differnceSetAll.put(bitSet, bitSet1);
-            }
-        }
-
-
-        return differnceSetAll;
-    }
     public static Map<BitSet, Long> readDiffSetsMap(String dsFilePath) {
         List<String> lines = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(dsFilePath))) {
@@ -126,23 +93,6 @@ public class DataIO {
 
     public static void printDiffMap(Map<BitSet, Long> map, String writeFilePath) {
         List<Map.Entry<BitSet, Long>> entries = new ArrayList<>(map.entrySet());
-        entries.sort(Utils.BitsetMapComparator());
-
-        try (PrintWriter pw = new PrintWriter(new FileWriter(writeFilePath,false))) {
-            for (var entry : entries) {
-                pw.println(entry);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void printIntDiffMap(int nAttributes, Map<Integer, Long> diffFreq, String writeFilePath) {
-        Map<BitSet, Long> map = new HashMap<>();
-        for (Map.Entry<Integer, Long> df : diffFreq.entrySet())
-            map.put(Utils.intToBitSet(nAttributes, df.getKey()), df.getValue());
-
-        List<Map.Entry<BitSet,Long>> entries = new ArrayList<>(map.entrySet());
         entries.sort(Utils.BitsetMapComparator());
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(writeFilePath,false))) {

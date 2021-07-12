@@ -1,6 +1,6 @@
-package algorithm.hittingSet.BHMMCS;
+package algorithm.hittingSet.DynHS;
 
-import algorithm.hittingSet.NumSet;
+import util.Utils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,7 +52,7 @@ public class DynHS {
                 long setI = sets.get(i);
                 minSets.add(setI);
                 for (int j = sets.size() - 1; j > i && cardinalities[j] > cardinalities[i]; j--) {
-                    if (!notMin[j] && NumSet.isSubset(setI, sets.get(j)))
+                    if (!notMin[j] && Utils.isSubset(setI, sets.get(j)))
                         notMin[j] = true;
                 }
             }
@@ -146,7 +146,7 @@ public class DynHS {
                 else {
                     allMinSets.add(sbi);
                     for (int k = newSets.size() - 1; k >= 0 && car < newCars[k]; k--)
-                        if (!notMinNew[k] && NumSet.isSubset(sbi, newSets.get(k))) notMinNew[k] = true;
+                        if (!notMinNew[k] && Utils.isSubset(sbi, newSets.get(k))) notMinNew[k] = true;
                 }
             }
 
@@ -156,9 +156,9 @@ public class DynHS {
                 allMinSets.add(sbj);
                 newMinSets.add(sbj);
                 for (int k = oldMinSets.size() - 1; k >= 0 && car < oldCars[k]; k--)
-                    if (!notMinOld[k] && NumSet.isSubset(sbj, oldMinSets.get(k))) notMinOld[k] = true;
+                    if (!notMinOld[k] && Utils.isSubset(sbj, oldMinSets.get(k))) notMinOld[k] = true;
                 for (int k = newSets.size() - 1; k >= 0 && car < newCars[k]; k--)
-                    if (!notMinNew[k] && NumSet.isSubset(sbj, newSets.get(k))) notMinNew[k] = true;
+                    if (!notMinNew[k] && Utils.isSubset(sbj, newSets.get(k))) notMinNew[k] = true;
             }
         }
 
@@ -178,7 +178,7 @@ public class DynHS {
         // 2 find all min exposed subsets in leftSubsets and add to minSubsets
         Set<Long> minExposedSets = findMinExposedLongSets(minRmvdSubsets, leftSubsets);
         minSubsets.addAll(minExposedSets);
-        NumSet.sortLongSets(nElements, minSubsets);
+        Utils.sortLongSets(nElements, minSubsets);
 
         // 3 update Hs(F) by removing affected vertices from all nodes
         coverNodes = removeVerticesFromNodes(minRmvdSubsets, minRemoved);
@@ -209,9 +209,9 @@ public class DynHS {
         for (long minRemovedSet : minRemovedSets) {
             int car = Long.bitCount(minRemovedSet);
             for (int j = leftSubsets.size() - 1; j >= 0 && leftCar[j] > car; j--) {
-                if (NumSet.isSubset(minRemovedSet, leftSubsets.get(j)) && !minExposedSets.contains(leftSubsets.get(j))) {
+                if (Utils.isSubset(minRemovedSet, leftSubsets.get(j)) && !minExposedSets.contains(leftSubsets.get(j))) {
                     int k = 0;
-                    for (; leftCar[k] < leftCar[j] && !NumSet.isSubset(leftSubsets.get(k), leftSubsets.get(j)); k++) ;
+                    for (; leftCar[k] < leftCar[j] && !Utils.isSubset(leftSubsets.get(k), leftSubsets.get(j)); k++) ;
                     if (leftCar[k] >= leftCar[j]) minExposedSets.add(leftSubsets.get(j));
                 }
             }
@@ -232,7 +232,7 @@ public class DynHS {
         Set<Long> walked = new HashSet<>();
         List<DynHSNode> newCoverNodes = new ArrayList<>(coverNodes.size());
 
-        Integer[] removedEles = NumSet.indicesOfOnes(affected).toArray(new Integer[0]);
+        Integer[] removedEles = Utils.indicesOfOnes(affected).toArray(new Integer[0]);
         for (DynHSNode nd : coverNodes) {
             long parentElements = nd.elements & ~affected;
             if (walked.add(parentElements)) {

@@ -33,39 +33,11 @@ public class Utils {
         };
     }
 
-    public static int boolArrayToInt(boolean[] bools) {
-        int x = 0;
-        for (int i = 0; i < bools.length; i++)
-            if (bools[i]) x |= (1 << i);
-        return x;
-    }
-
-    public static BitSet intToBitSet(int nAttributes, int n) {
-        BitSet bs = new BitSet(nAttributes);
-        for (int i = 0; i < nAttributes; i++)
-            if ((n & (1 << i)) != 0) bs.set(i);
-        return bs;
-    }
-
     public static BitSet longToBitSet(int nAttributes, long n) {
         BitSet bs = new BitSet(nAttributes);
         for (int i = 0; i < nAttributes; i++)
             if ((n & (1L << i)) != 0) bs.set(i);
         return bs;
-    }
-
-    public static BitSet boolArrayToBitSet(boolean[] bools) {
-        BitSet bs = new BitSet(bools.length);
-        for (int i = 0; i < bools.length; i++)
-            if (bools[i]) bs.set(i);
-        return bs;
-    }
-
-    public static int bitsetToInt(int nAttributes, BitSet bs) {
-        int x = 0;
-        for (int i = 0; i < nAttributes; i++)
-            if (bs.get(i)) x |= (1 << i);
-        return x;
     }
 
     public static long bitsetToLong(int nAttributes, BitSet bs) {
@@ -74,5 +46,46 @@ public class Utils {
             if (bs.get(i)) x |= (1L << i);
         return x;
     }
+
+    public static List<Integer> indicesOfOnes(long n) {
+        List<Integer> res = new ArrayList<>();
+        int pos = 0;
+        while (n > 0) {
+            if ((n & 1) != 0L) res.add(pos);
+            pos++;
+            n >>>= 1;
+        }
+        return res;
+    }
+
+    public static boolean isSubset(long a, long b) {
+        return a == (a & b);
+    }
+
+    public static void sortLongSets(int nEles, List<Long> sets) {
+        List<List<Long>> buckets = new ArrayList<>(nEles + 1);
+        for (int i = 0; i <= nEles; i++)
+            buckets.add(new ArrayList<>());
+
+        for (long set : sets)
+            buckets.get(Long.bitCount(set)).add(set);
+
+        sets.clear();
+        for (List<Long> bucket : buckets)
+            sets.addAll(bucket);
+    }
+
+    public static boolean removeEmptyLongSetUnsorted(List<Long> sets) {
+        boolean hasEmptySubset = false;
+        for (int i = 0; i < sets.size(); i++) {
+            if (sets.get(i) == 0) {
+                hasEmptySubset = true;
+                sets.remove(i);
+                break;
+            }
+        }
+        return hasEmptySubset;
+    }
+
 
 }

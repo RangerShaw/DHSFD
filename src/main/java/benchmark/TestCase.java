@@ -1,9 +1,9 @@
 package benchmark;
 
 import algorithm.differenceSet.DiffConnector;
-import algorithm.hittingSet.BHMMCS.DynHS;
-import algorithm.hittingSet.MMCSLong.Mmcs;
-import algorithm.hittingSet.BHMMCS.DynHSConnector;
+import algorithm.hittingSet.DynHS.DynHS;
+import algorithm.hittingSet.MMCS.Mmcs;
+import algorithm.hittingSet.DynHS.DynHSConnector;
 import util.DataIO;
 import util.Utils;
 

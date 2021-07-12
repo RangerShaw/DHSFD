@@ -1,6 +1,5 @@
-package algorithm.hittingSet.BHMMCS;
+package algorithm.hittingSet.DynHS;
 
-import algorithm.hittingSet.NumSet;
 import util.Utils;
 
 import java.util.*;
@@ -21,7 +20,7 @@ public class DynHSConnector {
     public void initiate(int nElements, List<Long> toCover) {
         this.nElements = nElements;
 
-        NumSet.sortLongSets(nElements, toCover);
+        Utils.sortLongSets(nElements, toCover);
 
         List<List<Long>> subsetParts = genSubsetRhss(toCover);
 
@@ -34,7 +33,7 @@ public class DynHSConnector {
 
 
     public List<List<BitSet>> insertSubsets(List<Long> addedSets) {
-        NumSet.sortLongSets(nElements, addedSets);
+        Utils.sortLongSets(nElements, addedSets);
         List<List<Long>> subsetParts = genSubsetRhss(addedSets);
 
         for (int rhs = 0; rhs < nElements; rhs++) {
@@ -48,7 +47,7 @@ public class DynHSConnector {
         List<List<Long>> leftSubsetRhss = genSubsetRhss(leftDiffs);
 
         List<Long> rmvdDiffs = new ArrayList<>(removed);
-        NumSet.sortLongSets(nElements, rmvdDiffs);
+        Utils.sortLongSets(nElements, rmvdDiffs);
         List<List<Long>> rmvdSubsetRhss = genSubsetRhss(rmvdDiffs);
 
         for (int rhs = 0; rhs < nElements; rhs++) {

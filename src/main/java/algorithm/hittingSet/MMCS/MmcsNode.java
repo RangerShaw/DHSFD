@@ -1,6 +1,6 @@
-package algorithm.hittingSet.MMCSLong;
+package algorithm.hittingSet.MMCS;
 
-import algorithm.hittingSet.NumSet;
+import util.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +48,7 @@ public class MmcsNode {
     }
 
     public boolean isGlobalMinimal() {
-        return NumSet.indicesOfOnes(elements).stream().noneMatch(e -> crit.get(e).isEmpty());
+        return Utils.indicesOfOnes(elements).stream().noneMatch(e -> crit.get(e).isEmpty());
     }
 
     /**
@@ -89,7 +89,7 @@ public class MmcsNode {
             else uncov.add(sb);
         }
 
-        for (int u : NumSet.indicesOfOnes(elements))
+        for (int u : Utils.indicesOfOnes(elements))
             crit.get(u).removeIf(F -> (F & (1L << e)) != 0);
 
         elements |= 1L << e;

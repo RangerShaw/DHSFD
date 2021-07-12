@@ -1,6 +1,6 @@
-package algorithm.hittingSet.MMCSLong;
+package algorithm.hittingSet.MMCS;
 
-import algorithm.hittingSet.NumSet;
+import util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +32,8 @@ public class Mmcs {
     }
 
     public void initiate(List<Long> subsets) {
-        if (NumSet.removeEmptyLongSetUnsorted(subsets)) hasEmptySubset = true;
-        // minSubsets = NumSet.findMinLongSets(subsets);
+        if (Utils.removeEmptyLongSetUnsorted(subsets)) hasEmptySubset = true;
+        // minSubsets = Utils.findMinLongSets(subsets);
         coverNodes = walkDown(new MmcsNode(nElements, subsets));
     }
 
@@ -57,7 +57,7 @@ public class Mmcs {
         long addCandidates = nd.getAddCandidates();
         childCand &= ~(addCandidates);
 
-        for (int e : NumSet.indicesOfOnes(addCandidates)) {
+        for (int e : Utils.indicesOfOnes(addCandidates)) {
             MmcsNode childNode = nd.getChildNode(e, childCand);
             if (childNode.isGlobalMinimal()) {
                 walkDown(childNode, newNodes);
