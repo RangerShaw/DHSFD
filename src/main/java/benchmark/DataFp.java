@@ -5,6 +5,18 @@ package benchmark;
  */
 public class DataFp {
 
+    // experiment index
+    /*
+        0   N/A
+        1
+        2
+        3
+        4
+        5
+        6   DynHS V.S. MMCS
+     */
+
+    // dataset index
     /*
         0   letter
         1   reduced
@@ -12,68 +24,243 @@ public class DataFp {
         3   pitches
         4   hepatitis
         5   cab
+        6   flights
+        7   haemoglobin
+        8   horse
+        9   accident
     */
 
     static int[] N_ATTRIBUTES = new int[]{
             17,
+            0,
+            0,
+            40,
+            0,
+            54,
+            31,
+            34,
+            27,
+            47,
     };
 
 
     /* test MMCS and BHMMCS */
 
+    static String[] BHMMCS_REMOVE_INPUT_BASE_EDGE = new String[]{
+            "dataFiles/exp6/letter/_100_.txt",
+            "",
+            "",
+            "dataFiles/exp6/pitches/_100_.txt",
+            "",
+            "dataFiles/exp6/cab/_100_.txt",
+            "dataFiles/exp6/flights/_100_.txt",
+            "dataFiles/exp6/Haemoglobin/_100_.txt",
+            "dataFiles/exp6/horse/_100_.txt",
+            "dataFiles/exp6/accident/_100_.txt",
+
+    };
+
+    static String[][] BHMMCS_REMOVE_INPUT_RMVD_EDGE = new String[][]{
+            {
+                    "dataFiles/exp6/letter/_remove_95.txt",
+                    "dataFiles/exp6/letter/_remove_90.txt",
+                    "dataFiles/exp6/letter/_remove_85.txt",
+                    "dataFiles/exp6/letter/_remove_80.txt",
+                    "dataFiles/exp6/letter/_remove_70.txt",
+                    "dataFiles/exp6/letter/_remove_60.txt",
+                    "dataFiles/exp6/letter/_remove_50.txt",
+            },
+            {},
+            {},
+            {
+                    "dataFiles/exp6/pitches/_remove_90.txt",
+                    "dataFiles/exp6/pitches/_remove_80.txt",
+                    "dataFiles/exp6/pitches/_remove_70.txt",
+                    "dataFiles/exp6/pitches/_remove_60.txt",
+                    "dataFiles/exp6/pitches/_remove_50.txt",
+            },
+            {},
+            {
+                    "dataFiles/exp6/cab/_remove_90.txt",
+                    "dataFiles/exp6/cab/_remove_80.txt",
+                    "dataFiles/exp6/cab/_remove_70.txt",
+                    "dataFiles/exp6/cab/_remove_60.txt",
+                    "dataFiles/exp6/cab/_remove_50.txt",
+            },
+            {
+                    "dataFiles/exp6/flights/_remove_90.txt",
+                    "dataFiles/exp6/flights/_remove_80.txt",
+                    "dataFiles/exp6/flights/_remove_70.txt",
+                    "dataFiles/exp6/flights/_remove_60.txt",
+                    "dataFiles/exp6/flights/_remove_50.txt",
+            },
+            {
+                    "dataFiles/exp6/haemoglobin/_remove_90.txt",
+                    "dataFiles/exp6/haemoglobin/_remove_80.txt",
+                    "dataFiles/exp6/haemoglobin/_remove_70.txt",
+                    "dataFiles/exp6/haemoglobin/_remove_60.txt",
+                    "dataFiles/exp6/haemoglobin/_remove_50.txt",
+            },
+            {
+                    "dataFiles/exp6/horse/_remove_90.txt",
+                    "dataFiles/exp6/horse/_remove_80.txt",
+                    "dataFiles/exp6/horse/_remove_70.txt",
+                    "dataFiles/exp6/horse/_remove_60.txt",
+                    "dataFiles/exp6/horse/_remove_50.txt",
+            },
+            {
+                    "dataFiles/exp6/accident/_remove_90.txt",
+                    "dataFiles/exp6/accident/_remove_80.txt",
+                    "dataFiles/exp6/accident/_remove_70.txt",
+                    "dataFiles/exp6/accident/_remove_60.txt",
+                    "dataFiles/exp6/accident/_remove_50.txt",
+            },
+    };
+
+    static String[][] BHMMCS_REMOVE_INPUT_LEFT_EDGE = new String[][]{
+            {
+                    "dataFiles/exp6/letter/_left_95.txt",
+                    "dataFiles/exp6/letter/_left_90.txt",
+                    "dataFiles/exp6/letter/_left_85.txt",
+                    "dataFiles/exp6/letter/_left_80.txt",
+                    "dataFiles/exp6/letter/_left_70.txt",
+                    "dataFiles/exp6/letter/_left_60.txt",
+                    "dataFiles/exp6/letter/_left_50.txt",
+            },
+            {},
+            {},
+            {
+                    "dataFiles/exp6/pitches/_left_90.txt",
+                    "dataFiles/exp6/pitches/_left_80.txt",
+                    "dataFiles/exp6/pitches/_left_70.txt",
+                    "dataFiles/exp6/pitches/_left_60.txt",
+                    "dataFiles/exp6/pitches/_left_50.txt",
+            },
+            {},
+            {
+                    "dataFiles/exp6/cab/_left_90.txt",
+                    "dataFiles/exp6/cab/_left_80.txt",
+                    "dataFiles/exp6/cab/_left_70.txt",
+                    "dataFiles/exp6/cab/_left_60.txt",
+                    "dataFiles/exp6/cab/_left_50.txt",
+            },
+            {
+                    "dataFiles/exp6/flights/_left_90.txt",
+                    "dataFiles/exp6/flights/_left_80.txt",
+                    "dataFiles/exp6/flights/_left_70.txt",
+                    "dataFiles/exp6/flights/_left_60.txt",
+                    "dataFiles/exp6/flights/_left_50.txt",
+            },
+            {
+                    "dataFiles/exp6/haemoglobin/_left_90.txt",
+                    "dataFiles/exp6/haemoglobin/_left_80.txt",
+                    "dataFiles/exp6/haemoglobin/_left_70.txt",
+                    "dataFiles/exp6/haemoglobin/_left_60.txt",
+                    "dataFiles/exp6/haemoglobin/_left_50.txt",
+            },
+            {
+                    "dataFiles/exp6/horse/_left_90.txt",
+                    "dataFiles/exp6/horse/_left_80.txt",
+                    "dataFiles/exp6/horse/_left_70.txt",
+                    "dataFiles/exp6/horse/_left_60.txt",
+                    "dataFiles/exp6/horse/_left_50.txt",
+            },
+            {
+                    "dataFiles/exp6/accident/_left_90.txt",
+                    "dataFiles/exp6/accident/_left_80.txt",
+                    "dataFiles/exp6/accident/_left_70.txt",
+                    "dataFiles/exp6/accident/_left_60.txt",
+                    "dataFiles/exp6/accident/_left_50.txt",
+            },
+
+    };
+
+    static String[][] BHMMCS_REMOVE_OUTPUT_HS = new String[][]{
+            {
+                    "dataFiles/exp6/letter/letter_HS_95.csv",
+                    "dataFiles/exp6/letter/letter_HS_90.csv",
+                    "dataFiles/exp6/letter/letter_HS_85.csv",
+                    "dataFiles/exp6/letter/letter_HS_80.csv",
+                    "dataFiles/exp6/letter/letter_HS_70.csv",
+                    "dataFiles/exp6/letter/letter_HS_60.csv",
+                    "dataFiles/exp6/letter/letter_HS_50.csv",
+            },
+            {},
+            {},
+            {
+            }
+    };
+
+
     static String[][] MMCS_INPUT_EDGE = new String[][]{
             {
-                    "dataFiles/hs/_left95.txt",
-                    "dataFiles/hs/_left90.txt",
-                    "dataFiles/hs/_left85.txt",
-                    "dataFiles/hs/_left80.txt",
+                    "dataFiles/exp6/letter/_left_95.txt",
+                    "dataFiles/exp6/letter/_left_90.txt",
+                    "dataFiles/exp6/letter/_left_85.txt",
+                    "dataFiles/exp6/letter/_left_80.txt",
+                    "dataFiles/exp6/letter/_left_70.txt",
+                    "dataFiles/exp6/letter/_left_60.txt",
+                    "dataFiles/exp6/letter/_left_50.txt",
             },
+            {},
+            {},
+            {
+                    "dataFiles/exp6/pitches/_left_90.txt",
+                    "dataFiles/exp6/pitches/_left_80.txt",
+                    "dataFiles/exp6/pitches/_left_70.txt",
+                    "dataFiles/exp6/pitches/_left_60.txt",
+                    "dataFiles/exp6/pitches/_left_50.txt",
+            },
+            {},
+            {
+                    "dataFiles/exp6/cab/_left_90.txt",
+                    "dataFiles/exp6/cab/_left_80.txt",
+                    "dataFiles/exp6/cab/_left_70.txt",
+                    "dataFiles/exp6/cab/_left_60.txt",
+                    "dataFiles/exp6/cab/_left_50.txt",
+            },
+            {
+                    "dataFiles/exp6/flights/_left_90.txt",
+                    "dataFiles/exp6/flights/_left_80.txt",
+                    "dataFiles/exp6/flights/_left_70.txt",
+                    "dataFiles/exp6/flights/_left_60.txt",
+                    "dataFiles/exp6/flights/_left_50.txt",
+            },
+            {
+                    "dataFiles/exp6/haemoglobin/_left_90.txt",
+                    "dataFiles/exp6/haemoglobin/_left_80.txt",
+                    "dataFiles/exp6/haemoglobin/_left_70.txt",
+                    "dataFiles/exp6/haemoglobin/_left_60.txt",
+                    "dataFiles/exp6/haemoglobin/_left_50.txt",
+            },
+            {
+                    "dataFiles/exp6/horse/_left_90.txt",
+                    "dataFiles/exp6/horse/_left_80.txt",
+                    "dataFiles/exp6/horse/_left_70.txt",
+                    "dataFiles/exp6/horse/_left_60.txt",
+                    "dataFiles/exp6/horse/_left_50.txt",
+            },
+            {
+                    "dataFiles/exp6/accident/_left_90.txt",
+                    "dataFiles/exp6/accident/_left_80.txt",
+                    "dataFiles/exp6/accident/_left_70.txt",
+                    "dataFiles/exp6/accident/_left_60.txt",
+                    "dataFiles/exp6/accident/_left_50.txt",
+            },
+
     };
 
     static String[][] MMCS_OUTPUT_HS = new String[][]{
             {
-                    "dataFiles/letter/hs/letter_HS_15000.csv",
-                    "dataFiles/letter/hs/letter_HS_16000.csv",
-                    "dataFiles/letter/hs/letter_HS_17000.csv",
-                    "dataFiles/letter/hs/letter_HS_18000.csv",
-                    "dataFiles/letter/hs/letter_HS_19000.csv",
-                    "dataFiles/letter/hs/letter_HS_20000.csv",
+                    "dataFiles/exp6/letter/hs/letter_HS_95.csv",
+                    "dataFiles/exp6/letter/hs/letter_HS_90.csv",
+                    "dataFiles/exp6/letter/hs/letter_HS_85.csv",
+                    "dataFiles/exp6/letter/hs/letter_HS_80.csv",
+                    "dataFiles/exp6/letter/hs/letter_HS_70.csv",
+                    "dataFiles/exp6/letter/hs/letter_HS_60.csv",
+                    "dataFiles/exp6/letter/hs/letter_HS_50.csv",
             },
     };
-
-    static String[] BHMMCS_INPUT_BASE_EDGE = new String[]{
-            "dataFiles/hs/letter_100.txt",
-    };
-
-    static String[][] BHMMCS_INPUT_RMVD_EDGE = new String[][]{
-            {
-                    "dataFiles/hs/_remove_95.txt",
-                    "dataFiles/hs/_remove_90.txt",
-                    "dataFiles/hs/_remove_85.txt",
-                    "dataFiles/hs/_remove_80.txt",
-            },
-    };
-
-    static String[][] BHMMCS_INPUT_LEFT_EDGE = new String[][]{
-            {
-                    "dataFiles/hs/_left95.txt",
-                    "dataFiles/hs/_left90.txt",
-                    "dataFiles/hs/_left85.txt",
-                    "dataFiles/hs/_left80.txt",
-            },
-    };
-
-    static String[][] BHMMCS_OUTPUT_HS = new String[][]{
-            {
-                    "dataFiles/letter/hs/letter_HS_15000.csv",
-                    "dataFiles/letter/hs/letter_HS_16000.csv",
-                    "dataFiles/letter/hs/letter_HS_17000.csv",
-                    "dataFiles/letter/hs/letter_HS_18000.csv",
-                    "dataFiles/letter/hs/letter_HS_19000.csv",
-                    "dataFiles/letter/hs/letter_HS_20000.csv",
-            },
-    };
-
 
 
     /* test INSERT */

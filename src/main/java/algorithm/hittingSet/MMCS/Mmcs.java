@@ -67,11 +67,11 @@ public class Mmcs {
     }
 
     public List<Long> getMinCoverSets() {
-        return coverNodes.stream().map(MmcsNode::getElements).collect(Collectors.toList());
+        //return coverNodes.stream().map(MmcsNode::getElements).collect(Collectors.toList());
 
-//        return hasEmptySubset ? new ArrayList<>() : coverNodes.stream()
-//                .map(MmcsLongNode::getElements)
-//                .collect(Collectors.toList());
+        return hasEmptySubset ? new ArrayList<>() : coverNodes.stream()
+                .map(MmcsNode::getElements)
+                .collect(Collectors.toList());
     }
 
 }
