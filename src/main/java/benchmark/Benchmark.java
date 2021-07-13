@@ -3,16 +3,20 @@ package benchmark;
 public class Benchmark {
 
     public static void main(String[] args) {
-        int dataset = 6;
+        int dataset = 8;
+        int[] datasets = new int[]{0, 3, 5, 6, 7, 8, 9};
+        TestCase testCase = new TestCase();
 
-        //TestCase.testInsert(dataset);
-        //TestCase.testRemove(dataset);
-        //TestCase.testDiff(dataset);
+        //testCase.testInsert(dataset);
+        //testCase.testRemove(dataset);
+        //testCase.testDiff(dataset);
 
-        //TestCase.testMMCS(dataset);
-        //TestCase.testBHMMCS(dataset);
+        //testCase.testMMCS(dataset);
+        //testCase.testBHMMCS(dataset);
 
-        TestCase.exp6(dataset);
+        testCase.exp6(dataset);
+//        for (int d : datasets)
+//            testCase.exp6(d);
     }
 
 }

@@ -39,7 +39,7 @@ public class DataFp {
             54,
             31,
             34,
-            27,
+            28,
             47,
     };
 
@@ -272,6 +272,9 @@ public class DataFp {
             "",
             "dataFiles/hepatitis/insert/hepatitis_71.csv",
             "dataFiles/cab/insert/CAB_14000.csv",
+            "",
+            "",
+            "dataFiles/exp6/horse/horse.csv"
     };
 
     static String[] INSERT_INPUT_BASE_DIFF = new String[]{
@@ -281,6 +284,9 @@ public class DataFp {
             "",
             "dataFiles/hepatitis/insert/hepatitis_DS_71.csv",
             "dataFiles/cab/insert/CAB_DS_14000.csv",
+            "",
+            "",
+            "dataFiles/exp6/horse/_100_.txt"
     };
 
     static String[] INSERT_OUTPUT_BASE_FD = new String[]{
