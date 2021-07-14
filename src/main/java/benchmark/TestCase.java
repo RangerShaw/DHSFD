@@ -16,10 +16,17 @@ public class TestCase {
 
     class ResultExp6 {
         int hsSize;
+        double fminTime = 0;
         double totalTime;
 
         public ResultExp6(int hsSize, double totalTime) {
             this.hsSize = hsSize;
+            this.totalTime = totalTime;
+        }
+
+        public ResultExp6(int hsSize, double fminTime, double totalTime) {
+            this.hsSize = hsSize;
+            this.fminTime = fminTime;
             this.totalTime = totalTime;
         }
     }
@@ -86,18 +93,22 @@ public class TestCase {
 
         int hsSize = 0;
         double totalTime = 0;
+        double fminTime = 0;
         for (int e = 0; e < nAttributes; e++) {
             List<Long> leftRhs = genEdgeRhs(e, left);
 
             Mmcs mmcs = new Mmcs(nAttributes);
 
             long startTime = System.nanoTime();
-            mmcs.initiate(leftRhs, true);
+            List<Long> leftRhsMin = Utils.findMinLongSets(leftRhs);
+            fminTime += (double) (System.nanoTime() - startTime) / 1000000;
+            mmcs.initiate(leftRhsMin, true, false);
             totalTime += (double) (System.nanoTime() - startTime) / 1000000;
+
             hsSize += mmcs.getMinCoverSets().size();
         }
 
-        return new ResultExp6(hsSize, totalTime);
+        return new ResultExp6(hsSize, fminTime, totalTime);
     }
 
     public void exp6(int dataset) {
@@ -121,34 +132,18 @@ public class TestCase {
 
 
         System.out.println("\n===================MMCS==================");
-        System.out.println("No.\tHS\t\tTime(ms)\tData File");
+        System.out.println("No.\tHS\t\tfmin Time\t\tTotal Time(ms)\tData File");
 
         // preheat
         initMmcs(nAttributes, BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset][0]);
 
         for (int i = 0; i < BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset].length; i++) {
             ResultExp6 res = initMmcs(nAttributes, BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset][i]);
-            System.out.printf("%d\t%d\t%10.3f\t\t%s\n", i, res.hsSize, res.totalTime, BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset][i]);
+            System.out.printf("%d\t%d\t%10.3f\t%10.3f\t\t%s\n", i, res.hsSize, res.fminTime, res.totalTime, BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset][i]);
         }
 
     }
 
-    public void testMMCS(int dataset) {
-        int nAttributes = N_ATTRIBUTES[dataset];
-        System.out.println("No.\tHS\tTime(ms)");
-
-        for (int i = 0; i < MMCS_INPUT_EDGE[dataset].length; i++) {
-            Map<BitSet, Long> diffSetMap = DataIO.readDiffSetsMap(MMCS_INPUT_EDGE[dataset][i]);
-            List<Long> diffSet = diffSetMap.keySet().stream().map(bs -> Utils.bitsetToLong(nAttributes, bs)).collect(Collectors.toList());
-
-            long startTime = System.nanoTime();
-            Mmcs mmcs = new Mmcs(nAttributes);
-            mmcs.initiate(diffSet);
-            double totalTime = (double) (System.nanoTime() - startTime) / 1000000;
-
-            System.out.println(i + "\t" + mmcs.getMinCoverSets().size() + "\t" + totalTime);
-        }
-    }
 
     public void testDiff(int dataset) {
         for (int d = 0, size = DIFF_INPUT_DATA[dataset].length; d < size; d++) {

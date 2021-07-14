@@ -1,5 +1,6 @@
 package algorithm.hittingSet.MMCS;
 
+import algorithm.hittingSet.DynHS.DynHSNode;
 import util.Utils;
 
 import java.util.ArrayList;
@@ -36,21 +37,22 @@ public class Mmcs {
         coverNodes = walkDown(new MmcsNode(nElements, subsets));
     }
 
-    public void initiate(List<Long> subsets, boolean sorted) {
-        if(sorted) {
-            if (Utils.removeEmptyLongSetSorted(subsets)) hasEmptySubset = true;
-            List<Long> minSubsets = findMinLongSets(subsets);
-            coverNodes = walkDown(new MmcsNode(nElements, minSubsets));
+    public void initiate(List<Long> subsets, boolean sorted, boolean enableFmin) {
+        if (enableFmin) {
+            if (!sorted) Utils.sortLongSets(nElements, subsets);
+            hasEmptySubset = Utils.removeEmptyLongSetSorted(subsets);
+            subsets = Utils.findMinLongSets(subsets);
         } else {
-            initiate(subsets);
+            if (sorted) hasEmptySubset = Utils.removeEmptyLongSetSorted(subsets);
+            else hasEmptySubset = Utils.removeEmptyLongSetUnsorted(subsets);
         }
+
+        coverNodes = walkDown(new MmcsNode(nElements, subsets));
     }
 
     List<MmcsNode> walkDown(MmcsNode root) {
         List<MmcsNode> newCoverNodes = new ArrayList<>();
-
         walkDown(root, newCoverNodes);
-
         return newCoverNodes;
     }
 
@@ -66,13 +68,19 @@ public class Mmcs {
         long addCandidates = nd.getAddCandidates();
         childCand &= ~(addCandidates);
 
-        for (int e : Utils.indicesOfOnes(addCandidates)) {
-            MmcsNode childNode = nd.getChildNode(e, childCand);
-            if (childNode.isGlobalMinimal()) {
-                walkDown(childNode, newNodes);
-                childCand |= 1L << e;
+        int e = 0;
+        while (addCandidates > 0) {
+            if ((addCandidates & 1) != 0L) {
+                MmcsNode childNode = nd.getChildNode(e, childCand);
+                if (childNode.isGlobalMinimal()) {
+                    walkDown(childNode, newNodes);
+                    childCand |= 1L << e;
+                }
             }
+            e++;
+            addCandidates >>>= 1;
         }
+
     }
 
     public List<Long> getMinCoverSets() {
@@ -83,25 +91,5 @@ public class Mmcs {
                 .collect(Collectors.toList());
     }
 
-    public List<Long> findMinLongSets(List<Long> sets) {
-        /* sets should be already sorted */
-        List<Long> minSets = new ArrayList<>();
-
-        boolean[] notMin = new boolean[sets.size()];
-        int[] cardinalities = sets.stream().mapToInt(Long::bitCount).toArray();
-
-        for (int i = 0, size = sets.size(); i < size; i++) {
-            if (!notMin[i]) {
-                long setI = sets.get(i);
-                minSets.add(setI);
-                for (int j = sets.size() - 1; j > i && cardinalities[j] > cardinalities[i]; j--) {
-                    if (!notMin[j] && Utils.isSubset(setI, sets.get(j)))
-                        notMin[j] = true;
-                }
-            }
-        }
-
-        return minSets;
-    }
 
 }

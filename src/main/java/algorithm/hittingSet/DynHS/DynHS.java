@@ -95,19 +95,17 @@ public class DynHS {
         long addCandidates = nd.getAddCandidates();
         childCand &= ~(addCandidates);
 
-        {
-            int e = 0;
-            while (addCandidates > 0) {
-                if ((addCandidates & 1) != 0L) {
-                    DynHSNode childNode = nd.getChildNode(e, childCand);
-                    if (childNode.isGlobalMinimal()) {
-                        walkDown(childNode, newNodes, walked);
-                        childCand |= 1L << e;
-                    }
+        int e = 0;
+        while (addCandidates > 0) {
+            if ((addCandidates & 1) != 0L) {
+                DynHSNode childNode = nd.getChildNode(e, childCand);
+                if (childNode.isGlobalMinimal()) {
+                    walkDown(childNode, newNodes, walked);
+                    childCand |= 1L << e;
                 }
-                e++;
-                addCandidates >>>= 1;
             }
+            e++;
+            addCandidates >>>= 1;
         }
     }
 
@@ -230,7 +228,7 @@ public class DynHS {
         }
 
         Set<Long> walked = new HashSet<>();
-        List<DynHSNode> newCoverNodes = new ArrayList<>(coverNodes.size());
+        List<DynHSNode> newCoverNodes = new ArrayList<>();
 
         Integer[] removedEles = Utils.indicesOfOnes(affected).toArray(new Integer[0]);
         for (DynHSNode nd : coverNodes) {

@@ -48,7 +48,14 @@ public class MmcsNode {
     }
 
     public boolean isGlobalMinimal() {
-        return Utils.indicesOfOnes(elements).stream().noneMatch(e -> crit.get(e).isEmpty());
+        int e = 0;
+        long ele = elements;
+        while (ele > 0) {
+            if ((ele & 1) != 0L && crit.get(e).isEmpty()) return false;
+            e++;
+            ele >>>= 1;
+        }
+        return true;
     }
 
     /**
