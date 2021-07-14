@@ -87,5 +87,11 @@ public class Utils {
         return hasEmptySubset;
     }
 
+    public static boolean removeEmptyLongSetSorted(List<Long> sets) {
+        // sets should be sorted already
+        if (sets.isEmpty() || sets.get(0) != 0) return false;
+        sets.remove(0);
+        return true;
+    }
 
 }

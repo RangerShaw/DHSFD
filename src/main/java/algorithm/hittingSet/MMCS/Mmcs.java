@@ -33,8 +33,17 @@ public class Mmcs {
 
     public void initiate(List<Long> subsets) {
         if (Utils.removeEmptyLongSetUnsorted(subsets)) hasEmptySubset = true;
-        // minSubsets = Utils.findMinLongSets(subsets);
         coverNodes = walkDown(new MmcsNode(nElements, subsets));
+    }
+
+    public void initiate(List<Long> subsets, boolean sorted) {
+        if(sorted) {
+            if (Utils.removeEmptyLongSetSorted(subsets)) hasEmptySubset = true;
+            List<Long> minSubsets = findMinLongSets(subsets);
+            coverNodes = walkDown(new MmcsNode(nElements, minSubsets));
+        } else {
+            initiate(subsets);
+        }
     }
 
     List<MmcsNode> walkDown(MmcsNode root) {
@@ -72,6 +81,27 @@ public class Mmcs {
         return hasEmptySubset ? new ArrayList<>() : coverNodes.stream()
                 .map(MmcsNode::getElements)
                 .collect(Collectors.toList());
+    }
+
+    public List<Long> findMinLongSets(List<Long> sets) {
+        /* sets should be already sorted */
+        List<Long> minSets = new ArrayList<>();
+
+        boolean[] notMin = new boolean[sets.size()];
+        int[] cardinalities = sets.stream().mapToInt(Long::bitCount).toArray();
+
+        for (int i = 0, size = sets.size(); i < size; i++) {
+            if (!notMin[i]) {
+                long setI = sets.get(i);
+                minSets.add(setI);
+                for (int j = sets.size() - 1; j > i && cardinalities[j] > cardinalities[i]; j--) {
+                    if (!notMin[j] && Utils.isSubset(setI, sets.get(j)))
+                        notMin[j] = true;
+                }
+            }
+        }
+
+        return minSets;
     }
 
 }

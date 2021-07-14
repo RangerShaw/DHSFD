@@ -82,6 +82,7 @@ public class TestCase {
 
     ResultExp6 initMmcs(int nAttributes, String EdgeFp) {
         List<Long> left = DataIO.readDiffSetsMap(EdgeFp).keySet().stream().map(bs -> Utils.bitsetToLong(nAttributes, bs)).collect(Collectors.toList());
+        Utils.sortLongSets(nAttributes, left);
 
         int hsSize = 0;
         double totalTime = 0;
@@ -91,7 +92,7 @@ public class TestCase {
             Mmcs mmcs = new Mmcs(nAttributes);
 
             long startTime = System.nanoTime();
-            mmcs.initiate(leftRhs);
+            mmcs.initiate(leftRhs, true);
             totalTime += (double) (System.nanoTime() - startTime) / 1000000;
             hsSize += mmcs.getMinCoverSets().size();
         }
