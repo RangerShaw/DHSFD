@@ -5,8 +5,8 @@ public class Benchmark {
     public static void main(String[] args) {
         TestCase testCase = new TestCase();
 
-        int dataset = 8;
-        int[] datasets = new int[]{0, 3, 5, 6, 7, 8, 9};
+        int dataset = 0;
+        int[] datasets = new int[]{0, 3, 5, 6, 7, 8, 9, 10};
 
 
         //testCase.testInsert(dataset);
@@ -16,9 +16,9 @@ public class Benchmark {
         //testCase.testMMCS(dataset);
         //testCase.testBHMMCS(dataset);
 
-        testCase.exp6(dataset);
-//        for (int d : datasets)
-//            testCase.exp6(d);
+//        testCase.exp6insert(dataset);
+        for (int d : datasets)
+            testCase.exp6insert(d);
     }
 
 }

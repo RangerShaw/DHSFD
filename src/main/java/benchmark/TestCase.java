@@ -16,6 +16,7 @@ public class TestCase {
 
     class ResultExp6 {
         int hsSize;
+        int emptyCount = 0;
         double fminTime = 0;
         double totalTime;
 
@@ -24,11 +25,25 @@ public class TestCase {
             this.totalTime = totalTime;
         }
 
+        public ResultExp6(int hsSize, int emptyCount, double totalTime) {
+            this.hsSize = hsSize;
+            this.emptyCount = emptyCount;
+            this.totalTime = totalTime;
+        }
+
         public ResultExp6(int hsSize, double fminTime, double totalTime) {
             this.hsSize = hsSize;
             this.fminTime = fminTime;
             this.totalTime = totalTime;
         }
+    }
+
+    List<Long> genEdgeRhs(int e, List<Long> edges) {
+        List<Long> edgeRhs = new ArrayList<>();
+        long mask = 1L << e;
+        for (long edge : edges)
+            if ((edge & mask) != 0) edgeRhs.add(edge & ~mask);
+        return edgeRhs;
     }
 
     ResultExp6 initInsertDynHS(int nAttributes, List<Long> baseEdges, String istdEdgeFp) {
@@ -48,18 +63,9 @@ public class TestCase {
             dynHS.insertSubsets(istdRhs);
             totalTime += (double) (System.nanoTime() - startTime) / 1000000;
             hsSize += dynHS.getMinCoverSets().size();
-            System.out.println("hsSize " + e + ": " + dynHS.getMinCoverSets().size());
         }
 
         return new ResultExp6(hsSize, totalTime);
-    }
-
-    List<Long> genEdgeRhs(int e, List<Long> edges) {
-        List<Long> edgeRhs = new ArrayList<>();
-        long mask = 1L << e;
-        for (long edge : edges)
-            if ((edge & mask) != 0) edgeRhs.add(edge & ~mask);
-        return edgeRhs;
     }
 
     ResultExp6 initRemoveDynHS(int nAttributes, List<Long> baseEdges, String leftEdgeFp, String rmvdEdgeFp) {
@@ -100,18 +106,15 @@ public class TestCase {
             Mmcs mmcs = new Mmcs(nAttributes);
 
             long startTime = System.nanoTime();
-            List<Long> leftRhsMin = Utils.findMinLongSets(leftRhs);
-            fminTime += (double) (System.nanoTime() - startTime) / 1000000;
-            mmcs.initiate(leftRhsMin, true, false);
+            mmcs.initiate(leftRhs, true, true);
             totalTime += (double) (System.nanoTime() - startTime) / 1000000;
-
             hsSize += mmcs.getMinCoverSets().size();
         }
 
         return new ResultExp6(hsSize, fminTime, totalTime);
     }
 
-    public void exp6(int dataset) {
+    public void exp6remove(int dataset) {
         int nAttributes = N_ATTRIBUTES[dataset];
 
 
@@ -132,14 +135,47 @@ public class TestCase {
 
 
         System.out.println("\n===================MMCS==================");
-        System.out.println("No.\tHS\t\tfmin Time\t\tTotal Time(ms)\tData File");
+        System.out.println("No.\tHS\tTotal Time(ms)\tData File");
 
         // preheat
         initMmcs(nAttributes, BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset][0]);
 
         for (int i = 0; i < BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset].length; i++) {
             ResultExp6 res = initMmcs(nAttributes, BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset][i]);
-            System.out.printf("%d\t%d\t%10.3f\t%10.3f\t\t%s\n", i, res.hsSize, res.fminTime, res.totalTime, BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset][i]);
+            System.out.printf("%d\t%d\t%10.3f\t\t%s\n", i, res.hsSize, res.totalTime, BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset][i]);
+        }
+
+    }
+
+    public void exp6insert(int dataset) {
+        int nAttributes = N_ATTRIBUTES[dataset];
+
+
+        System.out.println("\n===================DynHS==================");
+        System.out.println("No.\tHS\t\tTime(ms)\tData File");
+
+        Map<BitSet, Long> diffSetMap = DataIO.readDiffSetsMap(BHMMCS_INSERT_INPUT_BASE_EDGE[dataset]);
+        List<Long> baseEdges = diffSetMap.keySet().stream().map(bs -> Utils.bitsetToLong(nAttributes, bs)).collect(Collectors.toList());
+        Utils.sortLongSets(nAttributes, baseEdges);
+
+        // preheat
+        initInsertDynHS(nAttributes, baseEdges, BHMMCS_INSERT_INPUT_ISTD_EDGE[dataset][0]);
+
+        for (int i = 0; i < BHMMCS_INSERT_INPUT_ISTD_EDGE[dataset].length; i++) {
+            ResultExp6 res = initInsertDynHS(nAttributes, baseEdges, BHMMCS_INSERT_INPUT_ISTD_EDGE[dataset][i]);
+            System.out.printf("%d\t%d\t%10.3f\t\t%s\n", i, res.hsSize, res.totalTime, BHMMCS_INSERT_INPUT_ISTD_EDGE[dataset][i]);
+        }
+
+
+        System.out.println("\n===================MMCS==================");
+        System.out.println("No.\tHS\tTotal Time(ms)\tData File");
+
+        // preheat
+        initMmcs(nAttributes, MMCS_INSERT_INPUT_EDGE[dataset][0]);
+
+        for (int i = 0; i < MMCS_INSERT_INPUT_EDGE[dataset].length; i++) {
+            ResultExp6 res = initMmcs(nAttributes, MMCS_INSERT_INPUT_EDGE[dataset][i]);
+            System.out.printf("%d\t%d\t%10.3f\t\t%s\n", i, res.hsSize, res.totalTime, MMCS_INSERT_INPUT_EDGE[dataset][i]);
         }
 
     }
