@@ -67,13 +67,8 @@ public class DataFp {
             "dataFiles/exp6/letter/_remove_90.txt",
             "dataFiles/exp6/letter/_remove_85.txt",
             "dataFiles/exp6/letter/_remove_80.txt",
+            "dataFiles/exp6/letter/_remove_75.txt",
             "dataFiles/exp6/letter/_remove_70.txt",
-            "dataFiles/exp6/letter/_remove_60.txt",
-            "dataFiles/exp6/letter/_remove_50.txt",
-            "dataFiles/exp6/letter/_remove_40.txt",
-            "dataFiles/exp6/letter/_remove_30.txt",
-            "dataFiles/exp6/letter/_remove_20.txt",
-            "dataFiles/exp6/letter/_remove_10.txt",
     }, {
     }, {
     }, {

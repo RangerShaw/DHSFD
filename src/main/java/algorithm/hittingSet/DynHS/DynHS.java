@@ -33,7 +33,7 @@ public class DynHS {
         // edges should be sorted by cardinality
         if (removeEmptyLongSet(edges)) hasEmptyEdge = true;
         minEdges = Utils.findMinLongSets(edges);
-        coverNodes = walkDown(new DynHSNode(nElements,elementsMask, minEdges));
+        coverNodes = walkDown(new DynHSNode(nElements, elementsMask, minEdges));
     }
 
 
@@ -102,7 +102,7 @@ public class DynHS {
         coverNodes = walkDown(coverNodes1);
     }
 
-    public List<Long> findMinLongSets(List<Long> oldMinSets, List<Long> newSets, List<Long> newMinSets, Set<Long> removed) {
+    List<Long> findMinLongSets(List<Long> oldMinSets, List<Long> newSets, List<Long> newMinSets, Set<Long> removed) {
         List<Long> allMinSets = new ArrayList<>();    // min sets of all current sets
 
         boolean[] notMinNew = new boolean[newSets.size()];
@@ -145,37 +145,36 @@ public class DynHS {
         if (removeEmptyLongSet(rmvdEdges)) hasEmptyEdge = false;
 
         // 1 remove obsolete min Edges from minEdges
-        List<Long> minRmvdSubsets = findRemovedMinLongSets(rmvdEdges);
-        Set<Long> minRemoved = new HashSet<>(minRmvdSubsets);
+        List<Long> minRmvdEdges = findRemovedMinEdges(rmvdEdges);
 
         // 2 find all min exposed Edges in leftEdges and add to minEdges
-        Set<Long> minExposedSets = findMinExposedLongSets(minRmvdSubsets, leftEdges);
+        Set<Long> minExposedSets = findMinExposedLongSets(minRmvdEdges, leftEdges);
         minEdges.addAll(minExposedSets);
         Utils.sortLongSets(nElements, minEdges);
 
         // 3 update Hs(F) by removing affected vertices from all nodes
-        coverNodes = removeVerticesFromNodes(minRmvdSubsets, minRemoved);
+        Set<Long> minRemoved = new HashSet<>(minRmvdEdges);
+        coverNodes = removeVerticesFromNodes(minRmvdEdges, minRemoved);
 
         // 4 walk down from each node in the updated Hs(F)
         coverNodes = walkDown(coverNodes);
     }
 
-    public List<Long> findRemovedMinLongSets(List<Long> removedSets) {
-        Set<Long> removed = new HashSet<>(removedSets);
-        List<Long> minRmvdSubsets = new ArrayList<>();
-        List<Long> newMinSets = new ArrayList<>(Math.max(10, minEdges.size() - removed.size() / 2));
+    List<Long> findRemovedMinEdges(List<Long> removedEdges) {
+        Set<Long> removed = new HashSet<>(removedEdges);
+        List<Long> rmvdMinEdges = new ArrayList<>();
+        List<Long> leftMinEdges = new ArrayList<>();
 
         for (long set : minEdges) {
-            if (removed.contains(set)) minRmvdSubsets.add(set);
-            else newMinSets.add(set);
+            if (removed.contains(set)) rmvdMinEdges.add(set);
+            else leftMinEdges.add(set);
         }
 
-        minEdges = newMinSets;
-
-        return minRmvdSubsets;
+        minEdges = leftMinEdges;
+        return rmvdMinEdges;
     }
 
-    public Set<Long> findMinExposedLongSets(List<Long> minRemovedSets, List<Long> leftSubsets) {
+    Set<Long> findMinExposedLongSets(List<Long> minRemovedSets, List<Long> leftSubsets) {
         Set<Long> minExposedSets = new HashSet<>();
         int[] leftCar = leftSubsets.stream().mapToInt(Long::bitCount).toArray();
 
@@ -226,9 +225,7 @@ public class DynHS {
     }
 
     public List<Long> getMinCoverSets() {
-        return hasEmptyEdge ? new ArrayList<>() : coverNodes.stream()
-                .map(DynHSNode::getElements)
-                .collect(Collectors.toList());
+        return hasEmptyEdge ? new ArrayList<>() : coverNodes.stream().map(DynHSNode::getElements).collect(Collectors.toList());
     }
 
     public boolean removeEmptyLongSet(List<Long> sets) {
