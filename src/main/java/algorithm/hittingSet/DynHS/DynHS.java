@@ -9,17 +9,15 @@ public class DynHS {
 
     private final int nElements;
 
-    static long elementsMask;
-
+    long elementsMask;
 
     /**
      * true iff there's an empty int to cover (which could never be covered).
      * return no cover set if true but walk down without the empty set
      */
-    boolean hasEmptySubset;
+    boolean hasEmptyEdge;
 
-    List<Long> minSubsets;
-
+    List<Long> minEdges;
 
     List<DynHSNode> coverNodes;
 
@@ -31,34 +29,11 @@ public class DynHS {
             elementsMask |= 1L << i;
     }
 
-    public void initiate(List<Long> subsets) {
-        // subsets should be sorted by cardinality
-        if (removeEmptyLongSet(subsets)) hasEmptySubset = true;
-
-        minSubsets = findMinLongSets(subsets);
-
-        coverNodes = walkDown(new DynHSNode(nElements, minSubsets));
-    }
-
-    public List<Long> findMinLongSets(List<Long> sets) {
-        /* sets should be already sorted */
-        List<Long> minSets = new ArrayList<>();
-
-        boolean[] notMin = new boolean[sets.size()];
-        int[] cardinalities = sets.stream().mapToInt(Long::bitCount).toArray();
-
-        for (int i = 0, size = sets.size(); i < size; i++) {
-            if (!notMin[i]) {
-                long setI = sets.get(i);
-                minSets.add(setI);
-                for (int j = sets.size() - 1; j > i && cardinalities[j] > cardinalities[i]; j--) {
-                    if (!notMin[j] && Utils.isSubset(setI, sets.get(j)))
-                        notMin[j] = true;
-                }
-            }
-        }
-
-        return minSets;
+    public void initiate(List<Long> edges) {
+        // edges should be sorted by cardinality
+        if (removeEmptyLongSet(edges)) hasEmptyEdge = true;
+        minEdges = Utils.findMinLongSets(edges);
+        coverNodes = walkDown(new DynHSNode(nElements,elementsMask, minEdges));
     }
 
 
@@ -110,17 +85,17 @@ public class DynHS {
     }
 
 
-    public void insertSubsets(List<Long> insertedSubsets) {
-        /* insertedSubsets should be already sorted */
-        if (removeEmptyLongSet(insertedSubsets)) hasEmptySubset = true;
+    public void insertEdges(List<Long> insertedEdges) {
+        /* insertedEdges should be already sorted */
+        if (removeEmptyLongSet(insertedEdges)) hasEmptyEdge = true;
 
-        List<Long> newMinSubsets = new ArrayList<>();
-        Set<Long> rmvMinSubsets = new HashSet<>();
-        minSubsets = findMinLongSets(minSubsets, insertedSubsets, newMinSubsets, rmvMinSubsets);
+        List<Long> newMinEdges = new ArrayList<>();
+        Set<Long> rmvMinEdges = new HashSet<>();
+        minEdges = findMinLongSets(minEdges, insertedEdges, newMinEdges, rmvMinEdges);
 
         List<DynHSNode> coverNodes1 = new ArrayList<>();
         for (DynHSNode prevNode : coverNodes) {
-            if (prevNode.insertSubsets(newMinSubsets, rmvMinSubsets))
+            if (prevNode.insertEdges(newMinEdges, rmvMinEdges))
                 coverNodes1.add(prevNode);
         }
 
@@ -164,19 +139,19 @@ public class DynHS {
     }
 
 
-    public void removeSubsets(List<Long> leftSubsets, List<Long> rmvdSubsets) {
-        /* leftSubsets and rmvdSubsets should be already sorted */
-        if (removeEmptyLongSet(leftSubsets)) hasEmptySubset = true;
-        if (removeEmptyLongSet(rmvdSubsets)) hasEmptySubset = false;
+    public void removeEdges(List<Long> leftEdges, List<Long> rmvdEdges) {
+        /* leftEdges and rmvdEdges should be already sorted */
+        if (removeEmptyLongSet(leftEdges)) hasEmptyEdge = true;
+        if (removeEmptyLongSet(rmvdEdges)) hasEmptyEdge = false;
 
-        // 1 remove obsolete min subsets from minSubsets
-        List<Long> minRmvdSubsets = findRemovedMinLongSets(rmvdSubsets);
+        // 1 remove obsolete min Edges from minEdges
+        List<Long> minRmvdSubsets = findRemovedMinLongSets(rmvdEdges);
         Set<Long> minRemoved = new HashSet<>(minRmvdSubsets);
 
-        // 2 find all min exposed subsets in leftSubsets and add to minSubsets
-        Set<Long> minExposedSets = findMinExposedLongSets(minRmvdSubsets, leftSubsets);
-        minSubsets.addAll(minExposedSets);
-        Utils.sortLongSets(nElements, minSubsets);
+        // 2 find all min exposed Edges in leftEdges and add to minEdges
+        Set<Long> minExposedSets = findMinExposedLongSets(minRmvdSubsets, leftEdges);
+        minEdges.addAll(minExposedSets);
+        Utils.sortLongSets(nElements, minEdges);
 
         // 3 update Hs(F) by removing affected vertices from all nodes
         coverNodes = removeVerticesFromNodes(minRmvdSubsets, minRemoved);
@@ -188,14 +163,14 @@ public class DynHS {
     public List<Long> findRemovedMinLongSets(List<Long> removedSets) {
         Set<Long> removed = new HashSet<>(removedSets);
         List<Long> minRmvdSubsets = new ArrayList<>();
-        List<Long> newMinSets = new ArrayList<>(Math.max(10, minSubsets.size() - removed.size() / 2));
+        List<Long> newMinSets = new ArrayList<>(Math.max(10, minEdges.size() - removed.size() / 2));
 
-        for (long set : minSubsets) {
+        for (long set : minEdges) {
             if (removed.contains(set)) minRmvdSubsets.add(set);
             else newMinSets.add(set);
         }
 
-        minSubsets = newMinSets;
+        minEdges = newMinSets;
 
         return minRmvdSubsets;
     }
@@ -217,14 +192,14 @@ public class DynHS {
         return minExposedSets;
     }
 
-    List<DynHSNode> removeVerticesFromNodes(List<Long> minRmvdSubsets, Set<Long> removedSets) {
+    List<DynHSNode> removeVerticesFromNodes(List<Long> minRmvdEdges, Set<Long> removedEdges) {
         long affected = 0;
-        for (long minRmvdSubset : minRmvdSubsets)
-            affected |= minRmvdSubset;
+        for (long minRmvdEdge : minRmvdEdges)
+            affected |= minRmvdEdge;
 
         List<Long> pending = new ArrayList<>();
-        for (long set : minSubsets) {
-            if ((set & affected) != 0) pending.add(set);
+        for (long edge : minEdges) {
+            if ((edge & affected) != 0) pending.add(edge);
         }
 
         Set<Long> walked = new HashSet<>();
@@ -234,7 +209,7 @@ public class DynHS {
         for (DynHSNode nd : coverNodes) {
             long parentElements = nd.elements & ~affected;
             if (walked.add(parentElements)) {
-                nd.removeVertices(parentElements, elementsMask, removedSets, removedEles, pending);
+                nd.removeVertices(parentElements, elementsMask, removedEdges, removedEles, pending);
                 newCoverNodes.add(nd);
             }
         }
@@ -244,14 +219,14 @@ public class DynHS {
 
 
     public List<Long> getSortedMinCoverSets() {
-        return hasEmptySubset ? new ArrayList<>() : coverNodes.stream()
+        return hasEmptyEdge ? new ArrayList<>() : coverNodes.stream()
                 .map(DynHSNode::getElements)
                 .sorted()
                 .collect(Collectors.toList());
     }
 
     public List<Long> getMinCoverSets() {
-        return hasEmptySubset ? new ArrayList<>() : coverNodes.stream()
+        return hasEmptyEdge ? new ArrayList<>() : coverNodes.stream()
                 .map(DynHSNode::getElements)
                 .collect(Collectors.toList());
     }

@@ -1,6 +1,7 @@
 package algorithm.hittingSet.DynHS;
 
 import java.util.*;
+
 import util.Utils;
 
 public class DynHSNode {
@@ -8,7 +9,6 @@ public class DynHSNode {
     long elements;
 
     long cand;
-
 
     private List<Long> uncov;
 
@@ -18,14 +18,11 @@ public class DynHSNode {
     private DynHSNode() {
     }
 
-    /**
-     * for initiation only
-     */
-    DynHSNode(int nEle, List<Long> setsToCover) {
+    /* for initiation only */
+    DynHSNode(int nEle, long mask, List<Long> edges) {
         elements = 0;
-        uncov = new ArrayList<>(setsToCover);
-
-        cand = DynHS.elementsMask;
+        uncov = new ArrayList<>(edges);
+        cand = mask;
 
         crit = new ArrayList<>(nEle);
         for (int i = 0; i < nEle; i++)
@@ -74,51 +71,50 @@ public class DynHSNode {
         crit = new ArrayList<>();
         for (int i = 0; i < parentNode.crit.size(); i++) {
             List<Long> critI = new ArrayList<>();
-            for (long set : parentNode.crit.get(i))
-                if ((set & (1L << e)) == 0) critI.add(set);
+            for (long edge : parentNode.crit.get(i))
+                if ((edge & (1L << e)) == 0) critI.add(edge);
             crit.add(critI);
         }
 
         uncov = new ArrayList<>();
-        for (long sb : parentNode.uncov) {
-            if ((sb & (1L << e)) != 0) crit.get(e).add(sb);
-            else uncov.add(sb);
+        for (long edge : parentNode.uncov) {
+            if ((edge & (1L << e)) != 0) crit.get(e).add(edge);
+            else uncov.add(edge);
         }
     }
 
 
-    boolean insertSubsets(List<Long> newSubsets, Set<Long> rmvMinSubsets) {
-        List<Integer> eles = Utils.indicesOfOnes(elements);
+    boolean insertEdges(List<Long> newEdges, Set<Long> rmvdMinEdges) {
+        for (List<Long> critI : crit)
+            if (!critI.isEmpty()) critI.removeAll(rmvdMinEdges);
 
-        for (int e : eles)
-            crit.get(e).removeAll(rmvMinSubsets);
-
-        for (long newSb : newSubsets) {
-            int critCover = getCritCover(newSb);
-            if (critCover == -1) uncov.add(newSb);
-            else if (critCover >= 0) crit.get(critCover).add(newSb);
+        for (long newEdge : newEdges) {
+            int critCover = getCritCover(newEdge);
+            if (critCover == -1) uncov.add(newEdge);
+            else if (critCover >= 0) crit.get(critCover).add(newEdge);
         }
 
-        for (int e : eles)
-            if (crit.get(e).isEmpty()) return false;
+        for (int e = 0, size = crit.size(); e < size; e++) {
+            if ((elements & (1L << e)) != 0 && crit.get(e).isEmpty())
+                return false;
+        }
         return true;
     }
 
-    void removeVertices(long newElements, long mask, Set<Long> removedSets, Integer[] removedVertices, List<Long> pending) {
+    void removeVertices(long newElements, long mask, Set<Long> removedEdges, Integer[] removedVertices, List<Long> pending) {
         elements = newElements;
-
         cand = (~elements) & mask;
 
         for (List<Long> critI : crit)
-            if (!critI.isEmpty()) critI.removeAll(removedSets);
+            if (!critI.isEmpty()) critI.removeAll(removedEdges);
 
         for (int e : removedVertices)
             crit.get(e).clear();
 
-        for (long set : pending) {
-            int critCover = getCritCover(set);
-            if (critCover == -1) uncov.add(set);
-            else if (critCover >= 0) crit.get(critCover).add(set);
+        for (long edge : pending) {
+            int critCover = getCritCover(edge);
+            if (critCover == -1) uncov.add(edge);
+            else if (critCover >= 0) crit.get(critCover).add(edge);
         }
     }
 
@@ -133,8 +129,8 @@ public class DynHSNode {
     int getCritCover(long sb) {
         long and = sb & elements;
         if (and == 0L) return -1;
-
         int ffs = Long.numberOfTrailingZeros(and);
         return and == (1L << ffs) ? ffs : -2;
     }
+
 }

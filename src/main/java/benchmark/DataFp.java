@@ -139,14 +139,8 @@ public class DataFp {
             "dataFiles/exp6/accident/_remove_10.txt",
     }, {
             "dataFiles/exp6/census/_remove_90.txt",
+            "dataFiles/exp6/census/_remove_85.txt",
             "dataFiles/exp6/census/_remove_80.txt",
-            "dataFiles/exp6/census/_remove_70.txt",
-            "dataFiles/exp6/census/_remove_60.txt",
-            "dataFiles/exp6/census/_remove_50.txt",
-            "dataFiles/exp6/census/_remove_40.txt",
-            "dataFiles/exp6/census/_remove_30.txt",
-            "dataFiles/exp6/census/_remove_20.txt",
-            "dataFiles/exp6/census/_remove_10.txt",
     },
     };
 
@@ -227,14 +221,8 @@ public class DataFp {
             "dataFiles/exp6/accident/_left_10.txt",
     }, {
             "dataFiles/exp6/census/_left_90.txt",
+            "dataFiles/exp6/census/_left_85.txt",
             "dataFiles/exp6/census/_left_80.txt",
-            "dataFiles/exp6/census/_left_70.txt",
-            "dataFiles/exp6/census/_left_60.txt",
-            "dataFiles/exp6/census/_left_50.txt",
-            "dataFiles/exp6/census/_left_40.txt",
-            "dataFiles/exp6/census/_left_30.txt",
-            "dataFiles/exp6/census/_left_20.txt",
-            "dataFiles/exp6/census/_left_10.txt",
     },
     };
 

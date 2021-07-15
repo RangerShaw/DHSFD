@@ -37,7 +37,7 @@ public class DynHSConnector {
         List<List<Long>> subsetParts = genSubsetRhss(addedSets);
 
         for (int rhs = 0; rhs < nElements; rhs++) {
-            bhmmcsList.get(rhs).insertSubsets(subsetParts.get(rhs));
+            bhmmcsList.get(rhs).insertEdges(subsetParts.get(rhs));
             minFDs.set(rhs, bhmmcsList.get(rhs).getMinCoverSets().stream().map(sb -> Utils.longToBitSet(nElements, sb)).collect(Collectors.toList()));
         }
         return new ArrayList<>(minFDs);
@@ -51,7 +51,7 @@ public class DynHSConnector {
         List<List<Long>> rmvdSubsetRhss = genSubsetRhss(rmvdDiffs);
 
         for (int rhs = 0; rhs < nElements; rhs++) {
-            bhmmcsList.get(rhs).removeSubsets(leftSubsetRhss.get(rhs), rmvdSubsetRhss.get(rhs));
+            bhmmcsList.get(rhs).removeEdges(leftSubsetRhss.get(rhs), rmvdSubsetRhss.get(rhs));
             minFDs.set(rhs, bhmmcsList.get(rhs).getMinCoverSets().stream().map(sb -> Utils.longToBitSet(nElements, sb)).collect(Collectors.toList()));
         }
 

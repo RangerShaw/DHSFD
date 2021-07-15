@@ -60,7 +60,7 @@ public class TestCase {
             dynHS.initiate(baseEdgeRhs);
 
             long startTime = System.nanoTime();
-            dynHS.insertSubsets(istdRhs);
+            dynHS.insertEdges(istdRhs);
             totalTime += (double) (System.nanoTime() - startTime) / 1000000;
             hsSize += dynHS.getMinCoverSets().size();
         }
@@ -85,7 +85,7 @@ public class TestCase {
             dynHS.initiate(baseEdgeRhs);
 
             long startTime = System.nanoTime();
-            dynHS.removeSubsets(leftRhs, rmvdRhs);
+            dynHS.removeEdges(leftRhs, rmvdRhs);
             totalTime += (double) (System.nanoTime() - startTime) / 1000000;
             hsSize += dynHS.getMinCoverSets().size();
         }
@@ -292,7 +292,7 @@ public class TestCase {
             dynHS.initiate(diffSet);
 
             long startTime = System.nanoTime();
-            dynHS.removeSubsets(left, rmvd);
+            dynHS.removeEdges(left, rmvd);
             double totalTime = (double) (System.nanoTime() - startTime) / 1000000;
 
             System.out.println(i + "\t" + dynHS.getMinCoverSets().size() + "\t" + totalTime);

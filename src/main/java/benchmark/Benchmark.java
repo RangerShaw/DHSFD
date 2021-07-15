@@ -16,9 +16,9 @@ public class Benchmark {
         //testCase.testMMCS(dataset);
         //testCase.testBHMMCS(dataset);
 
-//        testCase.exp6insert(dataset);
-        for (int d : datasets)
-            testCase.exp6insert(d);
+        testCase.exp6remove(dataset);
+//        for (int d : datasets)
+//            testCase.exp6insert(d);
     }
 
 }
