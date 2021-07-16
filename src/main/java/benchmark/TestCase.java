@@ -2,6 +2,8 @@ package benchmark;
 
 import algorithm.differenceSet.DiffConnector;
 import algorithm.hittingSet.DynHS.DynHS;
+import algorithm.hittingSet.DynHS1.DynHS1;
+import algorithm.hittingSet.DynHS1.DynHSConnector1;
 import algorithm.hittingSet.MMCS.Mmcs;
 import algorithm.hittingSet.DynHS.DynHSConnector;
 import util.DataIO;
@@ -68,6 +70,28 @@ public class TestCase {
         return new ResultExp6(hsSize, totalTime);
     }
 
+    ResultExp6 initInsertDynHS1(int nAttributes, List<Long> baseEdges, String istdEdgeFp) {
+        List<Long> istd = DataIO.readDiffSetsMap(istdEdgeFp).keySet().stream().map(bs -> Utils.bitsetToLong(nAttributes, bs)).collect(Collectors.toList());
+        Utils.sortLongSets(nAttributes, istd);
+
+        int hsSize = 0;
+        double totalTime = 0;
+        for (int e = 0; e < nAttributes; e++) {
+            List<Long> baseEdgeRhs = genEdgeRhs(e, baseEdges);
+            List<Long> istdRhs = genEdgeRhs(e, istd);
+
+            DynHS1 dynHS = new DynHS1(nAttributes);
+            dynHS.initiate(baseEdgeRhs);
+
+            long startTime = System.nanoTime();
+            dynHS.insertEdges(istdRhs);
+            totalTime += (double) (System.nanoTime() - startTime) / 1000000;
+            hsSize += dynHS.getMinCoverSets().size();
+        }
+
+        return new ResultExp6(hsSize, totalTime);
+    }
+
     ResultExp6 initRemoveDynHS(int nAttributes, List<Long> baseEdges, String leftEdgeFp, String rmvdEdgeFp) {
         List<Long> left = DataIO.readDiffSetsMap(leftEdgeFp).keySet().stream().map(bs -> Utils.bitsetToLong(nAttributes, bs)).collect(Collectors.toList());
         List<Long> rmvd = DataIO.readDiffSetsMap(rmvdEdgeFp).keySet().stream().map(bs -> Utils.bitsetToLong(nAttributes, bs)).collect(Collectors.toList());
@@ -82,6 +106,31 @@ public class TestCase {
             List<Long> rmvdRhs = genEdgeRhs(e, rmvd);
 
             DynHS dynHS = new DynHS(nAttributes);
+            dynHS.initiate(baseEdgeRhs);
+
+            long startTime = System.nanoTime();
+            dynHS.removeEdges(leftRhs, rmvdRhs);
+            totalTime += (double) (System.nanoTime() - startTime) / 1000000;
+            hsSize += dynHS.getMinCoverSets().size();
+        }
+
+        return new ResultExp6(hsSize, totalTime);
+    }
+
+    ResultExp6 initRemoveDynHS1(int nAttributes, List<Long> baseEdges, String leftEdgeFp, String rmvdEdgeFp) {
+        List<Long> left = DataIO.readDiffSetsMap(leftEdgeFp).keySet().stream().map(bs -> Utils.bitsetToLong(nAttributes, bs)).collect(Collectors.toList());
+        List<Long> rmvd = DataIO.readDiffSetsMap(rmvdEdgeFp).keySet().stream().map(bs -> Utils.bitsetToLong(nAttributes, bs)).collect(Collectors.toList());
+        Utils.sortLongSets(nAttributes, left);
+        Utils.sortLongSets(nAttributes, rmvd);
+
+        int hsSize = 0;
+        double totalTime = 0;
+        for (int e = 0; e < nAttributes; e++) {
+            List<Long> baseEdgeRhs = genEdgeRhs(e, baseEdges);
+            List<Long> leftRhs = genEdgeRhs(e, left);
+            List<Long> rmvdRhs = genEdgeRhs(e, rmvd);
+
+            DynHS1 dynHS = new DynHS1(nAttributes);
             dynHS.initiate(baseEdgeRhs);
 
             long startTime = System.nanoTime();
@@ -126,10 +175,10 @@ public class TestCase {
         Utils.sortLongSets(nAttributes, baseEdges);
 
         // preheat
-        initRemoveDynHS(nAttributes, baseEdges, BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset][0], BHMMCS_REMOVE_INPUT_RMVD_EDGE[dataset][0]);
+        initRemoveDynHS1(nAttributes, baseEdges, BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset][0], BHMMCS_REMOVE_INPUT_RMVD_EDGE[dataset][0]);
 
         for (int i = 0; i < BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset].length; i++) {
-            ResultExp6 res = initRemoveDynHS(nAttributes, baseEdges, BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset][i], BHMMCS_REMOVE_INPUT_RMVD_EDGE[dataset][i]);
+            ResultExp6 res = initRemoveDynHS1(nAttributes, baseEdges, BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset][i], BHMMCS_REMOVE_INPUT_RMVD_EDGE[dataset][i]);
             System.out.printf("%d\t%d\t%10.3f\t\t%s\n", i, res.hsSize, res.totalTime, BHMMCS_REMOVE_INPUT_LEFT_EDGE[dataset][i]);
         }
 
@@ -159,10 +208,10 @@ public class TestCase {
         Utils.sortLongSets(nAttributes, baseEdges);
 
         // preheat
-        initInsertDynHS(nAttributes, baseEdges, BHMMCS_INSERT_INPUT_ISTD_EDGE[dataset][0]);
+        initInsertDynHS1(nAttributes, baseEdges, BHMMCS_INSERT_INPUT_ISTD_EDGE[dataset][0]);
 
         for (int i = 0; i < BHMMCS_INSERT_INPUT_ISTD_EDGE[dataset].length; i++) {
-            ResultExp6 res = initInsertDynHS(nAttributes, baseEdges, BHMMCS_INSERT_INPUT_ISTD_EDGE[dataset][i]);
+            ResultExp6 res = initInsertDynHS1(nAttributes, baseEdges, BHMMCS_INSERT_INPUT_ISTD_EDGE[dataset][i]);
             System.out.printf("%d\t%d\t%10.3f\t\t%s\n", i, res.hsSize, res.totalTime, BHMMCS_INSERT_INPUT_ISTD_EDGE[dataset][i]);
         }
 
@@ -198,7 +247,7 @@ public class TestCase {
     public void testInsert(int dataset) {
         // 1 initiate
         DiffConnector diffConnector = initiateDiff(INSERT_INPUT_BASE_DATA[dataset], INSERT_INPUT_BASE_DIFF[dataset]);
-        DynHSConnector fdConnector = initiateFd(diffConnector.nElements, diffConnector.getDiffSet());
+        DynHSConnector1 fdConnector = initiateFd(diffConnector.nElements, diffConnector.getDiffSet());
 
         // 2 load inserted data all at once
         List<List<List<String>>> insertDatas = new ArrayList<>();
@@ -228,7 +277,7 @@ public class TestCase {
             List<List<BitSet>> currFDs = fdConnector.insertSubsets(newDiffs);
             fdTimes.add((double) (System.nanoTime() - startTime) / 1000000);
             totalFds.add(currFDs);
-            DataIO.printFDs(fdConnector, INSERT_OUTPUT_CURR_FD[dataset][i]);
+            //DataIO.printFDs(fdConnector, INSERT_OUTPUT_CURR_FD[dataset][i]);
         }
 
         // 4 print result and time
@@ -238,7 +287,7 @@ public class TestCase {
     public void testRemove(int dataset) {
         // 1 initiate
         DiffConnector diffConnector = initiateDiff(REMOVE_INPUT_BASE_DATA[dataset], REMOVE_INPUT_BASE_DIFF[dataset]);
-        DynHSConnector fdConnector = initiateFd(diffConnector.nElements, diffConnector.getDiffSet());
+        DynHSConnector1 fdConnector = initiateFd(diffConnector.nElements, diffConnector.getDiffSet());
         //DataIO.printFDs(fdConnector, REMOVE_OUTPUT_BASE_FD[dataset]);
 
         // 2 load removed data all at once
@@ -269,7 +318,7 @@ public class TestCase {
             List<List<BitSet>> currFDs = fdConnector.removeSubsets(leftDiffSet, removedDiffs);
             fdTimes.add((double) (System.nanoTime() - startTime) / 1000000);
             totalFds.add(currFDs);
-            DataIO.printFDs(fdConnector, REMOVE_OUTPUT_DELETED_FD[dataset][i]);
+            //DataIO.printFDs(fdConnector, REMOVE_OUTPUT_DELETED_FD[dataset][i]);
         }
 
         // 4 print result and time
@@ -313,9 +362,9 @@ public class TestCase {
         return diffConnector;
     }
 
-    DynHSConnector initiateFd(int nElements, List<Long> initDiffSets) {
+    DynHSConnector1 initiateFd(int nElements, List<Long> initDiffSets) {
         // initiate FD
-        DynHSConnector fdConnector = new DynHSConnector();
+        DynHSConnector1 fdConnector = new DynHSConnector1();
         //FdConnector fdConnector = nElements <= 32 ? new BhmmcsFdConnector() : new BhmmcsFdConnector64();
         fdConnector.initiate(nElements, initDiffSets);
         System.out.println("  # of initial FD: " + fdConnector.getMinFDs().stream().map(List::size).reduce(0, Integer::sum));
