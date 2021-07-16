@@ -1,6 +1,5 @@
 package algorithm.hittingSet.MMCS;
 
-import algorithm.hittingSet.DynHS.DynHSNode;
 import util.Utils;
 
 import java.util.ArrayList;

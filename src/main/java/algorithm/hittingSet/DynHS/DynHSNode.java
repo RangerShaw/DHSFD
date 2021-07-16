@@ -2,8 +2,6 @@ package algorithm.hittingSet.DynHS;
 
 import java.util.*;
 
-import util.Utils;
-
 public class DynHSNode {
 
     long elements;
@@ -84,14 +82,11 @@ public class DynHSNode {
     }
 
 
-    boolean insertEdges(List<Long> newEdges, Set<Long> rmvdMinEdges) {
-        for (List<Long> critI : crit)
-            if (!critI.isEmpty()) critI.removeAll(rmvdMinEdges);
-
-        for (long newEdge : newEdges) {
-            int critCover = getCritCover(newEdge);
-            if (critCover == -1) uncov.add(newEdge);
-            else if (critCover >= 0) crit.get(critCover).add(newEdge);
+    boolean insertEdges(List<Long> edges) {
+        for (long edge : edges) {
+            int critCover = getCritCover(edge);
+            if (critCover == -1) uncov.add(edge);
+            else if (critCover >= 0) crit.get(critCover).add(edge);
         }
 
         for (int e = 0, size = crit.size(); e < size; e++) {
@@ -101,17 +96,11 @@ public class DynHSNode {
         return true;
     }
 
-    void removeVertices(long newElements, long mask, Set<Long> removedEdges, Integer[] removedVertices, List<Long> pending) {
+    void removeVertices(long newElements, long mask, List<Long> edges) {
         elements = newElements;
         cand = (~elements) & mask;
 
-        for (List<Long> critI : crit)
-            if (!critI.isEmpty()) critI.removeAll(removedEdges);
-
-        for (int e : removedVertices)
-            crit.get(e).clear();
-
-        for (long edge : pending) {
+        for (long edge : edges) {
             int critCover = getCritCover(edge);
             if (critCover == -1) uncov.add(edge);
             else if (critCover >= 0) crit.get(critCover).add(edge);
@@ -121,6 +110,11 @@ public class DynHSNode {
 
     void resetCand(long mask) {
         cand = ~elements & mask;
+    }
+
+    void clearCrit() {
+        for (List<Long> c : crit)
+            c.clear();
     }
 
     /**

@@ -61,6 +61,7 @@ public class DynHS {
 
         if (nd.isCover()) {
             nd.resetCand(elementsMask);
+            nd.clearCrit();
             newNodes.add(nd);
             return;
         }
@@ -95,7 +96,7 @@ public class DynHS {
 
         List<DynHSNode> coverNodes1 = new ArrayList<>();
         for (DynHSNode prevNode : coverNodes) {
-            if (prevNode.insertEdges(newMinEdges, rmvMinEdges))
+            if (prevNode.insertEdges(minEdges))
                 coverNodes1.add(prevNode);
         }
 
@@ -196,19 +197,13 @@ public class DynHS {
         for (long minRmvdEdge : minRmvdEdges)
             affected |= minRmvdEdge;
 
-        List<Long> pending = new ArrayList<>();
-        for (long edge : minEdges) {
-            if ((edge & affected) != 0) pending.add(edge);
-        }
-
         Set<Long> walked = new HashSet<>();
         List<DynHSNode> newCoverNodes = new ArrayList<>();
 
-        Integer[] removedEles = Utils.indicesOfOnes(affected).toArray(new Integer[0]);
         for (DynHSNode nd : coverNodes) {
             long parentElements = nd.elements & ~affected;
             if (walked.add(parentElements)) {
-                nd.removeVertices(parentElements, elementsMask, removedEdges, removedEles, pending);
+                nd.removeVertices(parentElements, elementsMask, minEdges);
                 newCoverNodes.add(nd);
             }
         }
