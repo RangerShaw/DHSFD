@@ -20,7 +20,7 @@ public class PliClass {
     List<List<List<Integer>>> pli = new ArrayList<>();
 
     /**
-     * inversePli[t][e]: inverse mapping tuple t on attribute e to its cluster ID
+     * inversePli[t][e]: inverse mapping of tuple t on attribute e to its cluster ID
      */
     List<List<Integer>> inversePli = new ArrayList<>();
 

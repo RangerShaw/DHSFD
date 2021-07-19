@@ -18,7 +18,6 @@ public class DiffConnector {
         nElements = data.isEmpty() ? 0 : data.get(0).size();
         pliClass = new PliClass();
         differenceSet = new DifferenceSet();
-        //differenceSet = nElements <= 32 ? new DifferenceSet() : new DifferenceSet64();
     }
 
     public List<Long> generatePliAndDiff(List<List<String>> data) {

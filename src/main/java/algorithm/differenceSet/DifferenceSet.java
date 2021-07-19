@@ -37,11 +37,6 @@ public class DifferenceSet {
     }
 
     public Map<BitSet, Long> generateDiffSet(List<List<List<Integer>>> pli, List<List<Integer>> inversePli) {
-        nAttributes = inversePli.isEmpty() ? 0 : inversePli.get(0).size();
-
-        for (int i = 0; i < nAttributes; i++)
-            fullDiff |= 1L << i;
-
         initInsertData(pli, inversePli);
 
         Map<BitSet, Long> diffSetMap = new HashMap<>();
