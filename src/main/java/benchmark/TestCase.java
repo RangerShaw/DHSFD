@@ -4,11 +4,15 @@ import algorithm.differenceSet.DiffConnector;
 import algorithm.hittingSet.DynHS.DynHS;
 import algorithm.hittingSet.DynHS.DynHSConnector;
 import algorithm.hittingSet.MMCS.Mmcs;
+import com.koloboke.collect.map.hash.HashLongLongMap;
+import com.koloboke.collect.map.hash.HashLongLongMaps;
+import me.tongfei.progressbar.ProgressBar;
 import util.DataIO;
 import util.Utils;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static benchmark.DataFp.*;
 
@@ -228,6 +232,34 @@ public class TestCase {
     }
 
 
+    public void testDiffBF(int dataset) {
+        for (int d = 0, size = DIFF_INPUT_DATA[dataset].length; d < size; d++) {
+            // load base data
+            System.out.println("[INITIALIZING]...");
+            List<List<String>> csvData = DataIO.readCsvFile(DIFF_INPUT_DATA[dataset][d]);
+
+            HashLongLongMap diffFreq = HashLongLongMaps.newMutableMap();
+
+            ProgressBar.wrap(IntStream.range(0, csvData.size()), "Task").forEach(i -> {
+                for (int j = i + 1; j < csvData.size(); j++) {
+                    long diff = 0L;
+                    for (int k = 0; k < csvData.get(0).size(); k++)
+                        if (!csvData.get(i).get(k).equals(csvData.get(j).get(k))) diff |= 1L << k;
+                    diffFreq.addValue(diff, 1L, 0L);
+                }
+            });
+
+
+            Map<BitSet, Long> diffMap = new HashMap<>();
+            for (Map.Entry<Long, Long> df : diffFreq.entrySet())
+                diffMap.put(Utils.longToBitSet(csvData.get(0).size(), df.getKey()), df.getValue());
+
+            System.out.println("Size of diff: " + diffMap.size());
+            DataIO.printDiffMap(diffMap, DIFF_OUTPUT_DIFF[dataset][d]);
+        }
+    }
+
+
     public void testDiff(int dataset) {
         for (int d = 0, size = DIFF_INPUT_DATA[dataset].length; d < size; d++) {
             DiffConnector diffConnector = new DiffConnector();
@@ -235,12 +267,19 @@ public class TestCase {
             System.out.println("[INITIALIZING]...");
             List<List<String>> csvData = DataIO.readCsvFile(DIFF_INPUT_DATA[dataset][d]);
 
+            HashLongLongMap diffFreq = HashLongLongMaps.newMutableMap();
+
+
             // initiate pli and differenceSet
             Map<BitSet, Long> diffMap = diffConnector.generatePliAndDiffMap(csvData);
+            for (Map.Entry<Long, Long> df : diffFreq.entrySet())
+                diffMap.put(Utils.longToBitSet(34, df.getKey()), df.getValue());
+
             System.out.println("Size of diff: " + diffMap.size());
             DataIO.printDiffMap(diffMap, DIFF_OUTPUT_DIFF[dataset][d]);
         }
     }
+
 
     public void testInsert(int dataset) {
         // 1 initiate

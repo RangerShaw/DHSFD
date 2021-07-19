@@ -106,7 +106,7 @@ public class DataIO {
 
     public static void printLongDiffMap(DiffConnector diffConnector, String writeFilePath) {
         Map<BitSet, Long> map = new HashMap<>();
-        Map<Long,Long> diffFreq = (Map<Long, Long>) diffConnector.getDiffFreq();
+        Map<Long,Long> diffFreq = diffConnector.getDiffFreq();
         for (Map.Entry<Long, Long> df : diffFreq.entrySet())
             map.put(Utils.longToBitSet(diffConnector.nElements, df.getKey()), df.getValue());
 

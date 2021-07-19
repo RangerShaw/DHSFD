@@ -643,8 +643,8 @@ public class DataFp {
     }, {
 
     }, {
-            "dataFiles/heam/diff/Haemoglobin_80.csv",
-            "dataFiles/heam/diff/Haemoglobin_90.csv"
+            "dataFiles/heam/diff/Haemoglobin.csv",
+            //"dataFiles/heam/diff/Haemoglobin_90.csv"
     }
     };
 
@@ -682,8 +682,8 @@ public class DataFp {
     }, {
 
     }, {
-            "dataFiles/heam/diff/Haemoglobin_DS_80.txt",
-            "dataFiles/heam/diff/Haemoglobin_DS_90.txt"
+            "dataFiles/heam/diff/Haemoglobin_DS_100_BF.txt",
+            //"dataFiles/heam/diff/Haemoglobin_DS_90.txt"
     }
 
     };
