@@ -234,7 +234,6 @@ public class TestCase {
 
     public void testDiffBF(int dataset) {
         for (int d = 0, size = DIFF_INPUT_DATA[dataset].length; d < size; d++) {
-            // load base data
             System.out.println("[INITIALIZING]...");
             List<List<String>> csvData = DataIO.readCsvFile(DIFF_INPUT_DATA[dataset][d]);
 
@@ -249,10 +248,32 @@ public class TestCase {
                 }
             });
 
-
             Map<BitSet, Long> diffMap = new HashMap<>();
             for (Map.Entry<Long, Long> df : diffFreq.entrySet())
                 diffMap.put(Utils.longToBitSet(csvData.get(0).size(), df.getKey()), df.getValue());
+
+            System.out.println("Size of diff: " + diffMap.size());
+            DataIO.printDiffMap(diffMap, DIFF_OUTPUT_DIFF[dataset][d]);
+        }
+    }
+
+
+    public void testDiffBF1(int dataset) {
+        for (int d = 0, size = DIFF_INPUT_DATA[dataset].length; d < size; d++) {
+            System.out.println("[INITIALIZING]...");
+            List<List<String>> csvData = DataIO.readCsvFile(DIFF_INPUT_DATA[dataset][d]);
+            int N = csvData.get(0).size();
+
+            Map<BitSet, Long> diffMap = new HashMap<>();
+
+            ProgressBar.wrap(IntStream.range(0, csvData.size()), "Task").forEach(i -> {
+                for (int j = i + 1; j < csvData.size(); j++) {
+                    BitSet diff = new BitSet(N);
+                    for (int k = 0; k < N; k++)
+                        if (!csvData.get(i).get(k).equals(csvData.get(j).get(k))) diff.set(k);
+                    diffMap.put(diff, diffMap.getOrDefault(diff, 0L) + 1L);
+                }
+            });
 
             System.out.println("Size of diff: " + diffMap.size());
             DataIO.printDiffMap(diffMap, DIFF_OUTPUT_DIFF[dataset][d]);

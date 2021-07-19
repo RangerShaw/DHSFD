@@ -12,7 +12,7 @@ public class Benchmark {
         //testCase.testInsert(dataset);
 //        testCase.testRemove(dataset);
         //testCase.testDiff(dataset);
-        testCase.testDiffBF(dataset);
+        testCase.testDiffBF1(dataset);
 
         //testCase.testMMCS(dataset);
         //testCase.testBHMMCS(dataset);
