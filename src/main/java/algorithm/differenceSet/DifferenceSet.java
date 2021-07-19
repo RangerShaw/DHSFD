@@ -29,7 +29,6 @@ public class DifferenceSet {
     }
 
     void initiateDataStructure(List<List<Integer>> inversePli) {
-        nTuples = inversePli.size();
         nAttributes = inversePli.isEmpty() ? 0 : inversePli.get(0).size();
 
         for (int i = 0; i < nAttributes; i++)
@@ -37,6 +36,8 @@ public class DifferenceSet {
     }
 
     public Map<BitSet, Long> generateDiffSet(List<List<List<Integer>>> pli, List<List<Integer>> inversePli) {
+        initiateDataStructure(inversePli);
+
         initInsertData(pli, inversePli);
 
         Map<BitSet, Long> diffSetMap = new HashMap<>();
@@ -48,6 +49,7 @@ public class DifferenceSet {
 
     public List<Long> generateDiffSet(List<List<Integer>> inversePli, String diffFp) {
         initiateDataStructure(inversePli);
+        nTuples = inversePli.size();
 
         Map<BitSet, Long> diffSetMap = DataIO.readDiffSetsMap(diffFp);
 

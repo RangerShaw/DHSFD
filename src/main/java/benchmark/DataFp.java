@@ -29,6 +29,7 @@ public class DataFp {
         8   horse
         9   accident
         10  census
+
     */
 
     static int[] N_ATTRIBUTES = new int[]{
@@ -385,19 +386,19 @@ public class DataFp {
             "dataFiles/hepatitis/insert/hepatitis_71.csv",
             "dataFiles/cab/insert/CAB_14000.csv",
             "",
-            "",
+            "dataFiles/heam/insert/Haemoglobin_70.csv",
             "dataFiles/exp6/horse/horse.csv"
     };
 
     static String[] INSERT_INPUT_BASE_DIFF = new String[]{
             "dataFiles/letter/insert/letter_DS_15000.txt",
-            "dataFiles/reduced/insert/fd-reduced_DS_200000.csv",
-            "dataFiles/echo/insert/echocardiogram_DS_70.csv",
+            "dataFiles/reduced/insert/fd-reduced_DS_200000.txt",
+            "dataFiles/echo/insert/echocardiogram_DS_70.txt",
             "",
-            "dataFiles/hepatitis/insert/hepatitis_DS_71.csv",
-            "dataFiles/cab/insert/CAB_DS_14000.csv",
+            "dataFiles/hepatitis/insert/hepatitis_DS_71.txt",
+            "dataFiles/cab/insert/CAB_DS_14000.txt",
             "",
-            "",
+            "dataFiles/heam/insert/Haemoglobin_DS_70.txt",
             "dataFiles/exp6/horse/_100_.txt"
     };
 
@@ -407,71 +408,71 @@ public class DataFp {
             "dataFiles/echo/insert/echocardiogram_FD_70.csv",
     };
 
-    static String[][] INSERT_INPUT_NEW_DATA = new String[][]{
-            {
-                    "dataFiles/letter/insert/letter_15000-16000.csv",
-                    "dataFiles/letter/insert/letter_16000-17000.csv",
-                    "dataFiles/letter/insert/letter_17000-18000.csv",
-                    "dataFiles/letter/insert/letter_18000-19000.csv",
-                    "dataFiles/letter/insert/letter_19000-20000.csv"
-            },
-            {
-                    "dataFiles/reduced/insert/fd-reduced_200000-210000.csv",
-                    "dataFiles/reduced/insert/fd-reduced_210000-220000.csv",
-                    "dataFiles/reduced/insert/fd-reduced_220000-230000.csv",
-                    "dataFiles/reduced/insert/fd-reduced_230000-240000.csv",
-                    "dataFiles/reduced/insert/fd-reduced_240000-250000.csv",
-            },
-            {
-                    "dataFiles/echo/insert/echocardiogram_70-80.csv",
-                    "dataFiles/echo/insert/echocardiogram_80-90.csv",
-            },
-            {
+    static String[][] INSERT_INPUT_NEW_DATA = new String[][]{{
+            "dataFiles/letter/insert/letter_15000-16000.csv",
+            "dataFiles/letter/insert/letter_16000-17000.csv",
+            "dataFiles/letter/insert/letter_17000-18000.csv",
+            "dataFiles/letter/insert/letter_18000-19000.csv",
+            "dataFiles/letter/insert/letter_19000-20000.csv"
+    }, {
+            "dataFiles/reduced/insert/fd-reduced_200000-210000.csv",
+            "dataFiles/reduced/insert/fd-reduced_210000-220000.csv",
+            "dataFiles/reduced/insert/fd-reduced_220000-230000.csv",
+            "dataFiles/reduced/insert/fd-reduced_230000-240000.csv",
+            "dataFiles/reduced/insert/fd-reduced_240000-250000.csv",
+    }, {
+            "dataFiles/echo/insert/echocardiogram_70-80.csv",
+            "dataFiles/echo/insert/echocardiogram_80-90.csv",
+    }, {
 
-            },
-            {
+    }, {
 
-            },
-            {
-//                    "dataFiles/cab/insert/CAB_54_10001-11000.csv",
-//                    "dataFiles/cab/insert/CAB_54_11001-12000.csv",
-//                    "dataFiles/cab/insert/CAB_54_12001-13000.csv",
-//                    "dataFiles/cab/insert/CAB_54_13001-14000.csv",
-//                    "dataFiles/cab/insert/CAB_54_14001-15000.csv",
-            }
+    }, {
+//            "dataFiles/cab/insert/CAB_54_10001-11000.csv",
+//            "dataFiles/cab/insert/CAB_54_11001-12000.csv",
+//            "dataFiles/cab/insert/CAB_54_12001-13000.csv",
+//            "dataFiles/cab/insert/CAB_54_13001-14000.csv",
+//            "dataFiles/cab/insert/CAB_54_14001-15000.csv",
+    }, {
+
+    }, {
+            "dataFiles/heam/insert/Haemoglobin_batch70.csv",
+            "dataFiles/heam/insert/Haemoglobin_batch80.csv",
+            "dataFiles/heam/insert/Haemoglobin_batch90.csv",
+    }
     };
 
-    static String[][] INSERT_OUTPUT_CURR_DIFF = new String[][]{
-            {
-                    "dataFiles/letter/insert/letter_DS_16000.txt",
-                    "dataFiles/letter/insert/letter_DS_17000.txt",
-                    "dataFiles/letter/insert/letter_DS_18000.txt",
-                    "dataFiles/letter/insert/letter_DS_19000.txt",
-                    "dataFiles/letter/insert/letter_DS_20000.txt"
-            },
-            {
-                    "dataFiles/reduced/insert/fd-reduced_DS_210000.csv",
-                    "dataFiles/reduced/insert/fd-reduced_DS_220000.csv",
-                    "dataFiles/reduced/insert/fd-reduced_DS_230000.csv",
-                    "dataFiles/reduced/insert/fd-reduced_DS_240000.csv",
-                    "dataFiles/reduced/insert/fd-reduced_DS_250000.csv",
-            },
-            {
+    static String[][] INSERT_OUTPUT_CURR_DIFF = new String[][]{{
+            "dataFiles/letter/insert/letter_DS_16000.txt",
+            "dataFiles/letter/insert/letter_DS_17000.txt",
+            "dataFiles/letter/insert/letter_DS_18000.txt",
+            "dataFiles/letter/insert/letter_DS_19000.txt",
+            "dataFiles/letter/insert/letter_DS_20000.txt"
+    }, {
+            "dataFiles/reduced/insert/fd-reduced_DS_210000.csv",
+            "dataFiles/reduced/insert/fd-reduced_DS_220000.csv",
+            "dataFiles/reduced/insert/fd-reduced_DS_230000.csv",
+            "dataFiles/reduced/insert/fd-reduced_DS_240000.csv",
+            "dataFiles/reduced/insert/fd-reduced_DS_250000.csv",
+    }, {
 
-            },
-            {
+    }, {
 
-            },
-            {
+    }, {
 
-            },
-            {
-                    "dataFiles/cab/insert/CAB_DS-11000.csv",
-                    "dataFiles/cab/insert/CAB_DS-12000.csv",
-                    "dataFiles/cab/insert/CAB_DS-13000.csv",
-                    "dataFiles/cab/insert/CAB_DS-14000.csv",
-                    "dataFiles/cab/insert/CAB_DS-15000.csv",
-            }
+    }, {
+            "dataFiles/cab/insert/CAB_DS-11000.csv",
+            "dataFiles/cab/insert/CAB_DS-12000.csv",
+            "dataFiles/cab/insert/CAB_DS-13000.csv",
+            "dataFiles/cab/insert/CAB_DS-14000.csv",
+            "dataFiles/cab/insert/CAB_DS-15000.csv",
+    }, {
+
+    }, {
+            "dataFiles/heam/insert/Haemoglobin_DS_80.txt",
+            "dataFiles/heam/insert/Haemoglobin_DS_90.txt",
+            "dataFiles/heam/insert/Haemoglobin_DS_100.txt",
+    }
     };
 
     static String[][] INSERT_OUTPUT_CURR_FD = new String[][]{
@@ -636,84 +637,82 @@ public class DataFp {
 
     /* test Diff */
 
-    static String[][] DIFF_INPUT_DATA = new String[][]{
-            {
-                    "dataFiles/letter/diff/letter_15000.csv",
-                    "dataFiles/letter/diff/letter_16000.csv",
-                    "dataFiles/letter/diff/letter_17000.csv",
-                    "dataFiles/letter/diff/letter_18000.csv",
-                    "dataFiles/letter/diff/letter_19000.csv",
-                    "dataFiles/letter/diff/letter_20000.csv",
-            },
-            {
-                    "dataFiles/reduced/diff/fd-reduced_200000.csv",
-                    "dataFiles/reduced/diff/fd-reduced_210000.csv",
-                    "dataFiles/reduced/diff/fd-reduced_220000.csv",
-                    "dataFiles/reduced/diff/fd-reduced_230000.csv",
-                    "dataFiles/reduced/diff/fd-reduced_240000.csv",
-                    "dataFiles/reduced/diff/fd-reduced_250000.csv",
-            },
-            {
-                    "dataFiles/echo/diff/echocardiogram_70.csv",
-                    "dataFiles/echo/diff/echocardiogram_80.csv",
-                    "dataFiles/echo/diff/echocardiogram_90.csv",
-            },
-            {
-                    //"dataFiles/pitches/diff/2019_pitches_241666.csv",
-                    "dataFiles/pitches/diff/2019_pitches_250000.csv"
-            },
-            {
-                    "dataFiles/hepatitis/diff/hepatitis_71.csv",
-                    "dataFiles/hepatitis/diff/hepatitis_154.csv",
-                    "dataFiles/hepatitis/diff/hepatitis_70.csv",
-                    "dataFiles/hepatitis/diff/hepatitis_72.csv",
-            },
-            {
-                    "dataFiles/cab/diff/CAB_14000.csv",
-                    "dataFiles/cab/diff/CAB_13000.csv",
-                    "dataFiles/cab/diff/CAB_12000.csv",
-                    "dataFiles/cab/diff/CAB_11000.csv",
-            }
+    static String[][] DIFF_INPUT_DATA = new String[][]{{
+            "dataFiles/letter/diff/letter_15000.csv",
+            "dataFiles/letter/diff/letter_16000.csv",
+            "dataFiles/letter/diff/letter_17000.csv",
+            "dataFiles/letter/diff/letter_18000.csv",
+            "dataFiles/letter/diff/letter_19000.csv",
+            "dataFiles/letter/diff/letter_20000.csv",
+    }, {
+            "dataFiles/reduced/diff/fd-reduced_200000.csv",
+            "dataFiles/reduced/diff/fd-reduced_210000.csv",
+            "dataFiles/reduced/diff/fd-reduced_220000.csv",
+            "dataFiles/reduced/diff/fd-reduced_230000.csv",
+            "dataFiles/reduced/diff/fd-reduced_240000.csv",
+            "dataFiles/reduced/diff/fd-reduced_250000.csv",
+    }, {
+            "dataFiles/echo/diff/echocardiogram_70.csv",
+            "dataFiles/echo/diff/echocardiogram_80.csv",
+            "dataFiles/echo/diff/echocardiogram_90.csv",
+    }, {
+            //"dataFiles/pitches/diff/2019_pitches_241666.csv",
+            "dataFiles/pitches/diff/2019_pitches_250000.csv"
+    }, {
+            "dataFiles/hepatitis/diff/hepatitis_71.csv",
+            "dataFiles/hepatitis/diff/hepatitis_154.csv",
+            "dataFiles/hepatitis/diff/hepatitis_70.csv",
+            "dataFiles/hepatitis/diff/hepatitis_72.csv",
+    }, {
+            "dataFiles/cab/diff/CAB_14000.csv",
+            "dataFiles/cab/diff/CAB_13000.csv",
+            "dataFiles/cab/diff/CAB_12000.csv",
+            "dataFiles/cab/diff/CAB_11000.csv",
+    }, {
+
+    }, {
+            "dataFiles/heam/diff/Haemoglobin_80.csv",
+            "dataFiles/heam/diff/Haemoglobin_90.csv"
+    }
     };
 
-    static String[][] DIFF_OUTPUT_DIFF = new String[][]{
-            {
-                    "dataFiles/letter/diff/letter_DS_15000.csv",
-                    "dataFiles/letter/diff/letter_DS_16000.csv",
-                    "dataFiles/letter/diff/letter_DS_17000.csv",
-                    "dataFiles/letter/diff/letter_DS_18000.csv",
-                    "dataFiles/letter/diff/letter_DS_19000.csv",
-                    "dataFiles/letter/diff/letter_DS_20000.csv",
-            },
-            {
-                    "dataFiles/reduced/diff/fd-reduced_DS_200000.csv",
-                    "dataFiles/reduced/diff/fd-reduced_DS_210000.csv",
-                    "dataFiles/reduced/diff/fd-reduced_DS_220000.csv",
-                    "dataFiles/reduced/diff/fd-reduced_DS_230000.csv",
-                    "dataFiles/reduced/diff/fd-reduced_DS_240000.csv",
-                    "dataFiles/reduced/diff/fd-reduced_DS_250000.csv",
-            },
-            {
-                    "dataFiles/echo/diff/echocardiogram_DS_70.csv",
-                    "dataFiles/echo/diff/echocardiogram_DS_80.csv",
-                    "dataFiles/echo/diff/echocardiogram_DS_90.csv",
-            },
-            {
-                    //"dataFiles/pitches/diff/2019_pitches_DS_241666.csv",
-                    "dataFiles/pitches/diff/2019_pitches_DS_250000.csv"
-            },
-            {
-                    "dataFiles/hepatitis/diff/hepatitis_DS_71.csv",
-                    "dataFiles/hepatitis/diff/hepatitis_DS_154.csv",
-                    "dataFiles/hepatitis/diff/hepatitis_70.csv",
-                    "dataFiles/hepatitis/diff/hepatitis_72.csv",
-            },
-            {
-                    "dataFiles/cab/diff/CAB_DS_14000.csv",
-                    "dataFiles/cab/diff/CAB_DS_13000.csv",
-                    "dataFiles/cab/diff/CAB_DS_12000.csv",
-                    "dataFiles/cab/diff/CAB_DS_11000.csv",
-            }
+    static String[][] DIFF_OUTPUT_DIFF = new String[][]{{
+            "dataFiles/letter/diff/letter_DS_15000.txt",
+            "dataFiles/letter/diff/letter_DS_16000.txt",
+            "dataFiles/letter/diff/letter_DS_17000.txt",
+            "dataFiles/letter/diff/letter_DS_18000.txt",
+            "dataFiles/letter/diff/letter_DS_19000.txt",
+            "dataFiles/letter/diff/letter_DS_20000.txt",
+    }, {
+            "dataFiles/reduced/diff/fd-reduced_DS_200000.txt",
+            "dataFiles/reduced/diff/fd-reduced_DS_210000.txt",
+            "dataFiles/reduced/diff/fd-reduced_DS_220000.txt",
+            "dataFiles/reduced/diff/fd-reduced_DS_230000.txt",
+            "dataFiles/reduced/diff/fd-reduced_DS_240000.txt",
+            "dataFiles/reduced/diff/fd-reduced_DS_250000.txt",
+    }, {
+            "dataFiles/echo/diff/echocardiogram_DS_70.txt",
+            "dataFiles/echo/diff/echocardiogram_DS_80.txt",
+            "dataFiles/echo/diff/echocardiogram_DS_90.txt",
+    }, {
+            //"dataFiles/pitches/diff/2019_pitches_DS_241666.txt",
+            "dataFiles/pitches/diff/2019_pitches_DS_250000.txt"
+    }, {
+            "dataFiles/hepatitis/diff/hepatitis_DS_71.txt",
+            "dataFiles/hepatitis/diff/hepatitis_DS_154.txt",
+            "dataFiles/hepatitis/diff/hepatitis_70.txt",
+            "dataFiles/hepatitis/diff/hepatitis_72.txt",
+    }, {
+            "dataFiles/cab/diff/CAB_DS_14000.txt",
+            "dataFiles/cab/diff/CAB_DS_13000.txt",
+            "dataFiles/cab/diff/CAB_DS_12000.txt",
+            "dataFiles/cab/diff/CAB_DS_11000.txt",
+    }, {
+
+    }, {
+            "dataFiles/heam/diff/Haemoglobin_DS_80.txt",
+            "dataFiles/heam/diff/Haemoglobin_DS_90.txt"
+    }
 
     };
 
