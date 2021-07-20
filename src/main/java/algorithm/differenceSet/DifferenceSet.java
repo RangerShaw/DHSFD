@@ -62,9 +62,7 @@ public class DifferenceSet {
         return new ArrayList<>(diffSet);
     }
 
-    /**
-     * @return new Diffs
-     */
+
     public List<Long> insertData(List<List<List<Integer>>> pli, List<List<Integer>> inversePli) {
         long[] diffHash = new long[inversePli.size()];
 
@@ -194,9 +192,7 @@ public class DifferenceSet {
         return newDiffs;
     }
 
-    /**
-     * @return remaining Diffs
-     */
+
     public Set<Long> removeData(List<List<List<Integer>>> pli, List<List<Integer>> inversePli,
                                 List<Integer> removedData, boolean[] removed) {
         Set<Long> removedDiffs = new HashSet<>();
@@ -268,6 +264,7 @@ public class DifferenceSet {
 
         return removedDiffs;
     }
+
 
     public List<Long> getDiffSet() {
         return new ArrayList<>(diffSet);

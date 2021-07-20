@@ -294,7 +294,7 @@ public class TestCase {
             // initiate pli and differenceSet
             Map<BitSet, Long> diffMap = diffConnector.generatePliAndDiffMap(csvData);
             for (Map.Entry<Long, Long> df : diffFreq.entrySet())
-                diffMap.put(Utils.longToBitSet(34, df.getKey()), df.getValue());
+                diffMap.put(Utils.longToBitSet(N_ATTRIBUTES[dataset], df.getKey()), df.getValue());
 
             System.out.println("Size of diff: " + diffMap.size());
             DataIO.printDiffMap(diffMap, DIFF_OUTPUT_DIFF[dataset][d]);
@@ -325,7 +325,6 @@ public class TestCase {
             // 3.1 update pli and differenceSet
             long startTime = System.nanoTime();
             List<Long> newDiffs = diffConnector.insertData(insertDatas.get(i));
-            DataIO.printLongDiffMap(diffConnector, INSERT_OUTPUT_CURR_DIFF[dataset][i]);
             diffTimes.add((double) (System.nanoTime() - startTime) / 1000000);
             insertDiffSets.add(newDiffs);
             //DataIO.printLongDiffMap(diffConnector,INSERT_OUTPUT_CURR_DIFF[dataset][i]);

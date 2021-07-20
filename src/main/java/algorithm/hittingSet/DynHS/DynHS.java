@@ -12,8 +12,8 @@ public class DynHS {
     long elementsMask;
 
     /**
-     * true iff there's an empty int to cover (which could never be covered).
-     * return no cover set if true but walk down without the empty set
+     * true iff there's an empty edge to cover (which could never be covered).
+     * return no cover if true but walk down without the empty set
      */
     boolean hasEmptyEdge;
 
@@ -38,21 +38,16 @@ public class DynHS {
 
 
     List<DynHSNode> walkDown(DynHSNode root) {
-        Set<Long> walked = new HashSet<>();
         List<DynHSNode> newCoverNodes = new ArrayList<>();
-
-        walkDown(root, newCoverNodes, walked);
-
+        walkDown(root, newCoverNodes, new HashSet<>());
         return newCoverNodes;
     }
 
     List<DynHSNode> walkDown(List<DynHSNode> oldCoverNodes) {
         Set<Long> walked = new HashSet<>();
         List<DynHSNode> newCoverNodes = new ArrayList<>();
-
         for (DynHSNode oldNode : oldCoverNodes)
             walkDown(oldNode, newCoverNodes, walked);
-
         return newCoverNodes;
     }
 
@@ -92,7 +87,7 @@ public class DynHS {
 
         List<Long> newMinEdges = new ArrayList<>();
         Set<Long> rmvMinEdges = new HashSet<>();
-        minEdges = findMinLongSets(minEdges, insertedEdges, newMinEdges, rmvMinEdges);
+        minEdges = findMinEdges(minEdges, insertedEdges, newMinEdges, rmvMinEdges);
 
         List<DynHSNode> coverNodes1 = new ArrayList<>();
         for (DynHSNode prevNode : coverNodes) {
@@ -103,36 +98,36 @@ public class DynHS {
         coverNodes = walkDown(coverNodes1);
     }
 
-    List<Long> findMinLongSets(List<Long> oldMinSets, List<Long> newSets, List<Long> newMinSets, Set<Long> removed) {
+    List<Long> findMinEdges(List<Long> oldMinEdges, List<Long> newEdges, List<Long> newMinEdges, Set<Long> rmvMinEdges) {
         List<Long> allMinSets = new ArrayList<>();    // min sets of all current sets
 
-        boolean[] notMinNew = new boolean[newSets.size()];
-        boolean[] notMinOld = new boolean[oldMinSets.size()];
-        int[] newCars = newSets.stream().mapToInt(Long::bitCount).toArray();
-        int[] oldCars = oldMinSets.stream().mapToInt(Long::bitCount).toArray();
+        boolean[] notMinNew = new boolean[newEdges.size()];
+        boolean[] notMinOld = new boolean[oldMinEdges.size()];
+        int[] newCars = newEdges.stream().mapToInt(Long::bitCount).toArray();
+        int[] oldCars = oldMinEdges.stream().mapToInt(Long::bitCount).toArray();
 
         for (int i = 0, j = 0, car = 1; car <= nElements; car++) {          // for each layer of cardinality
-            if (i == oldMinSets.size() && j == newSets.size()) break;
+            if (i == oldMinEdges.size() && j == newEdges.size()) break;
 
-            for (; i < oldMinSets.size() && oldCars[i] == car; i++) {   // use old min to filter new min
-                long sbi = oldMinSets.get(i);
-                if (notMinOld[i]) removed.add(sbi);
+            for (; i < oldMinEdges.size() && oldCars[i] == car; i++) {   // use old min to filter new min
+                long sbi = oldMinEdges.get(i);
+                if (notMinOld[i]) rmvMinEdges.add(sbi);
                 else {
                     allMinSets.add(sbi);
-                    for (int k = newSets.size() - 1; k >= 0 && car < newCars[k]; k--)
-                        if (!notMinNew[k] && Utils.isSubset(sbi, newSets.get(k))) notMinNew[k] = true;
+                    for (int k = newEdges.size() - 1; k >= 0 && car < newCars[k]; k--)
+                        if (!notMinNew[k] && Utils.isSubset(sbi, newEdges.get(k))) notMinNew[k] = true;
                 }
             }
 
-            for (; j < newSets.size() && newCars[j] == car; j++) {          // use new min to filter old and new min
+            for (; j < newEdges.size() && newCars[j] == car; j++) {          // use new min to filter old and new min
                 if (notMinNew[j]) continue;
-                long sbj = newSets.get(j);
+                long sbj = newEdges.get(j);
                 allMinSets.add(sbj);
-                newMinSets.add(sbj);
-                for (int k = oldMinSets.size() - 1; k >= 0 && car < oldCars[k]; k--)
-                    if (!notMinOld[k] && Utils.isSubset(sbj, oldMinSets.get(k))) notMinOld[k] = true;
-                for (int k = newSets.size() - 1; k >= 0 && car < newCars[k]; k--)
-                    if (!notMinNew[k] && Utils.isSubset(sbj, newSets.get(k))) notMinNew[k] = true;
+                newMinEdges.add(sbj);
+                for (int k = oldMinEdges.size() - 1; k >= 0 && car < oldCars[k]; k--)
+                    if (!notMinOld[k] && Utils.isSubset(sbj, oldMinEdges.get(k))) notMinOld[k] = true;
+                for (int k = newEdges.size() - 1; k >= 0 && car < newCars[k]; k--)
+                    if (!notMinNew[k] && Utils.isSubset(sbj, newEdges.get(k))) notMinNew[k] = true;
             }
         }
 
@@ -154,8 +149,7 @@ public class DynHS {
         Utils.sortLongSets(nElements, minEdges);
 
         // 3 update Hs(F) by removing affected vertices from all nodes
-        Set<Long> minRemoved = new HashSet<>(minRmvdEdges);
-        coverNodes = removeVerticesFromNodes(minRmvdEdges, minRemoved);
+        coverNodes = removeVerticesFromNodes(minRmvdEdges);
 
         // 4 walk down from each node in the updated Hs(F)
         coverNodes = walkDown(coverNodes);
@@ -192,7 +186,7 @@ public class DynHS {
         return minExposedSets;
     }
 
-    List<DynHSNode> removeVerticesFromNodes(List<Long> minRmvdEdges, Set<Long> removedEdges) {
+    List<DynHSNode> removeVerticesFromNodes(List<Long> minRmvdEdges) {
         long affected = 0;
         for (long minRmvdEdge : minRmvdEdges)
             affected |= minRmvdEdge;

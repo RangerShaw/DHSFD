@@ -38,38 +38,20 @@ public class DiffConnector {
 
     /**
      * read Diff Set from diffFp directly, generate all other structures as usual
-     *
-     * @param data input data, each tuple must be unique
      */
     public List<Long> generatePliAndDiff(List<List<String>> data, String diffFp) {
         initiateDataStructure(data);
-
         pliClass.generatePLI(data);
         differenceSet.generateDiffSet(pliClass.getInversePli(), diffFp);
-
         return differenceSet.getDiffSet();
     }
 
 
-    public List<Long> getDiffSet() {
-        return differenceSet.getDiffSet();
-    }
-
-    public Map<Long, Long> getDiffFreq() {
-        return differenceSet.getDiffFreq();
-    }
-
-    /**
-     * @return new Diffs
-     */
     public List<Long> insertData(List<List<String>> insertedData) {
         pliClass.insertData(insertedData);
         return differenceSet.insertData(pliClass.getPli(), pliClass.getInversePli());
     }
 
-    /**
-     * @return remain Diffs
-     */
     public Set<Long> removeData(List<Integer> removedData) {
         removedData.sort(Integer::compareTo);
 
@@ -82,6 +64,15 @@ public class DiffConnector {
         pliClass.removeData(removedData, removed);
 
         return leftDiffs;
+    }
+
+
+    public List<Long> getDiffSet() {
+        return differenceSet.getDiffSet();
+    }
+
+    public Map<Long, Long> getDiffFreq() {
+        return differenceSet.getDiffFreq();
     }
 
 }
