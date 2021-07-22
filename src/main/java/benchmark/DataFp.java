@@ -703,6 +703,46 @@ public class DataFp {
     },
     };
 
+    
+    /* exp 3: time decomposition */
+
+    static String[][] EXP3_INSERT_BASE_DATA = new String[][]{{
+            "dataFiles/exp2/r/CAB_54_10000.csv",
+            "dataFiles/exp2/r/CAB_54_11000.csv",
+            "dataFiles/exp2/r/CAB_54_12000.csv",
+            "dataFiles/exp2/r/CAB_54_13000.csv",
+            "dataFiles/exp2/r/CAB_54_14000.csv",
+    },
+    };
+
+    static String[][] EXP3_INSERT_BASE_DIFF = new String[][]{{
+            "dataFiles/exp2/r/CAB_54_10000.txt",
+            "dataFiles/exp2/r/CAB_54_11000.txt",
+            "dataFiles/exp2/r/CAB_54_12000.txt",
+            "dataFiles/exp2/r/CAB_54_13000.txt",
+            "dataFiles/exp2/r/CAB_54_14000.txt",
+    },
+    };
+
+    static String[][] EXP3_INSERT_ISRT_DATA = new String[][]{{
+            "dataFiles/exp2/r/CAB_54_10001-11000.csv",
+            "dataFiles/exp2/r/CAB_54_11001-12100.csv",
+            "dataFiles/exp2/r/CAB_54_12001-13200.csv",
+            "dataFiles/exp2/r/CAB_54_13001-14300.csv",
+            "dataFiles/exp2/r/CAB_54_14001-15400.csv",
+    },
+    };
+
+    static String[][] EXP3_REMOVE_RMVD_DATA = new String[][]{{
+            "dataFiles/exp2/r/CAB_54_10001-11000_del.csv",
+            "dataFiles/exp2/r/CAB_54_11001-12100_del.csv",
+            "dataFiles/exp2/r/CAB_54_12001-13200_del.csv",
+            "dataFiles/exp2/r/CAB_54_13001-14300_del.csv",
+            "dataFiles/exp2/r/CAB_54_14001-15400_del.csv",
+    },
+    };
+
+
     /* test INSERT */
 
     static String[] INSERT_INPUT_BASE_DATA = new String[]{

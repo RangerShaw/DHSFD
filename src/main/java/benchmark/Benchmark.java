@@ -16,34 +16,14 @@ public class Benchmark {
             testCase.testInsert(i);
             testCase.testRemove(i);
         }
-        /**
-         * varing R
-         */
-        for (int i = 3; i < 4; ++i) {
-            //testCase.testInsert(i);
-            testCase.testRemove(i);
-        }
-        /**
-         * varing r
-         */
-        for (int i = 4; i < 5; ++i) {
-            testCase.testInsert(i);
-            testCase.testRemove(i);
-        }
-        /**
-         * varing delta r
-         */
-        for (int i = 5; i < 6; ++i) {
-            testCase.testInsert(i);
-            testCase.testRemove(i);
-        }
-        /**
-         * varing ratio
-         */
-        for (int i = 6; i < 7; ++i) {
-            testCase.testInsert(i);
-            testCase.testRemove(i);
-        }
+
+        /* exp 2 */
+        int dataset = 0;
+        testCase.exp2_R(dataset);           //varying R
+        testCase.exp2_r(dataset);           //varying r
+        testCase.exp2_delta_r(dataset);     //varying delta r
+        testCase.exp2_lambda(dataset);      //varying ratio lambda
+
 
         /**
          * varing round

@@ -18,6 +18,10 @@ import static benchmark.DataFp.*;
 
 public class TestCase {
 
+    class exp2Res {
+
+    }
+
     public double insertThenDelete(String baseDataFp, String baseDiffFp, String isrtDataFp, String rmvdDataFp) {
         // 1 initiate
         DiffConnector diffConnector = initiateDiff(baseDataFp, baseDiffFp);
@@ -33,6 +37,7 @@ public class TestCase {
 
         List<Long> newDiffs = diffConnector.insertData(insertData);
         fdConnector.insertSubsets(newDiffs);
+        double diffTime = (double) (System.nanoTime() - startTime) / 1000000;
 
         Set<Long> removedDiffs = diffConnector.removeData(removedData);
         List<Long> leftDiffs = diffConnector.getDiffSet();
@@ -92,6 +97,10 @@ public class TestCase {
             double runtime = insertThenDelete(EXP2_LAMBDA_INSERT_BASE_DATA[d], EXP2_LAMBDA_INSERT_BASE_DIFF[d], EXP2_LAMBDA_INSERT_ISRT_DATA[d][i], EXP2_LAMBDA_REMOVE_RMVD_DATA[d][i]);
             System.out.printf("  %d\t%10.3f\t\t%s\n", i, runtime, EXP2_LAMBDA_INSERT_ISRT_DATA[d][i]);
         }
+    }
+
+    public void exp3(int d) {
+
     }
 
     class ResultExp6 {
