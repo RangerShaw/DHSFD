@@ -51,7 +51,7 @@ public class DifferenceSet {
         initiateDataStructure(inversePli);
         nTuples = inversePli.size();
 
-        Map<BitSet, Long> diffSetMap = DataIO.readDiffSetsMap(diffFp);
+        Map<BitSet, Long> diffSetMap = DataIO.readDiffMap(diffFp);
 
         diffSet.addAll(diffSetMap.keySet().stream().map(bs -> Utils.bitsetToLong(nAttributes, bs)).collect(Collectors.toList()));
         Utils.sortLongSets(nAttributes, diffSet);

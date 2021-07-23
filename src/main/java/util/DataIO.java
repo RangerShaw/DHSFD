@@ -39,7 +39,7 @@ public class DataIO {
         return res;
     }
 
-    public static Map<BitSet, Long> readDiffSetsMap(String dsFilePath) {
+    public static Map<BitSet, Long> readDiffMap(String dsFilePath) {
         List<String> lines = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(dsFilePath))) {
             String s;

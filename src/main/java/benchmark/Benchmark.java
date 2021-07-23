@@ -7,32 +7,24 @@ public class Benchmark {
         int dataset = 0;
 
         /* exp1 */
-//        for (int i = 0; i < 1; ++i) {
-//            testCase.testInsert(i);
-//            testCase.testRemove(i);
-//        }
+        //testCase.exp1(dataset);
 //
 //        /* exp 2 */
-//        testCase.exp2_R(dataset);           //varying R
-//        testCase.exp2_r(dataset);           //varying r
-//        testCase.exp2_delta_r(dataset);     //varying delta r
-//        testCase.exp2_lambda(dataset);      //varying ratio lambda
+//        testCase.exp2_R(dataset);           // varying R
+//        testCase.exp2_r(dataset);           // varying r
+//        testCase.exp2_delta_r(dataset);     // varying delta r
+//        testCase.exp2_lambda(dataset);      // varying ratio lambda
 
         /* exp 3 */
-        testCase.exp3(dataset);
+        //testCase.exp3_r(dataset);
 
-        /**
-         * varing round
-         */
-        for (int i = 7; i < 8; ++i) {
-            testCase.testInsert(i);
-            testCase.testRemove(i);
-        }
+        /* exp 4 */
+        //testCase.exp4_delta_ri(dataset);
+
 
         // available dataset indices for exp6: 0, 3, 5, 6, 7, 9, 10
-        DataFp.genExp6FilePath();
-        testCase.exp6Insert(dataset);
-        testCase.exp6Remove(dataset);
+        testCase.exp6_insert(dataset);
+        testCase.exp6_delete(dataset);
 
 
 //        testCase.testInsert(dataset);
