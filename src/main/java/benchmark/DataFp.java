@@ -574,131 +574,156 @@ public class DataFp {
 //
 //    };
 
+
     /* exp 2: scalability */
 
     // varying R
     static String[][] EXP2_R_INSERT_BASE_DATA = new String[][]{{
-            "dataFiles/exp2/varingR/CAB_54_10000.csv",
-            "dataFiles/exp2/varingR/CAB_50_10000.csv",
-            "dataFiles/exp2/varingR/CAB_46_10000.csv",
-            "dataFiles/exp2/varingR/CAB_42_10000.csv",
-            "dataFiles/exp2/varingR/CAB_38_10000.csv",
-            "dataFiles/exp2/varingR/CAB_34_10000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10000.csv",
+            "dataFiles/exp2/CAB/CAB_50_10000.csv",
+            "dataFiles/exp2/CAB/CAB_46_10000.csv",
+            "dataFiles/exp2/CAB/CAB_42_10000.csv",
+            "dataFiles/exp2/CAB/CAB_38_10000.csv",
+            "dataFiles/exp2/CAB/CAB_34_10000.csv",
     },
     };
 
     static String[][] EXP2_R_INSERT_BASE_DIFF = new String[][]{{
-            "dataFiles/exp2/varingR/CAB_54_10000.txt",
-            "dataFiles/exp2/varingR/CAB_50_10000.txt",
-            "dataFiles/exp2/varingR/CAB_46_10000.txt",
-            "dataFiles/exp2/varingR/CAB_42_10000.txt",
-            "dataFiles/exp2/varingR/CAB_38_10000.txt",
-            "dataFiles/exp2/varingR/CAB_34_10000.txt",
+            "dataFiles/exp2/CAB/CAB_54_10000.txt",
+            "dataFiles/exp2/CAB/CAB_50_10000.txt",
+            "dataFiles/exp2/CAB/CAB_46_10000.txt",
+            "dataFiles/exp2/CAB/CAB_42_10000.txt",
+            "dataFiles/exp2/CAB/CAB_38_10000.txt",
+            "dataFiles/exp2/CAB/CAB_34_10000.txt",
     },
     };
 
     static String[][] EXP2_R_INSERT_ISRT_DATA = new String[][]{{
-            "dataFiles/exp2/varingR/CAB_54_10001-11000.csv",
-            "dataFiles/exp2/varingR/CAB_50_10001-11000.csv",
-            "dataFiles/exp2/varingR/CAB_46_10001-11000.csv",
-            "dataFiles/exp2/varingR/CAB_42_10001-11000.csv",
-            "dataFiles/exp2/varingR/CAB_38_10001-11000.csv",
-            "dataFiles/exp2/varingR/CAB_34_10001-11000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11000.csv",
+            "dataFiles/exp2/CAB/CAB_50_10001-11000.csv",
+            "dataFiles/exp2/CAB/CAB_46_10001-11000.csv",
+            "dataFiles/exp2/CAB/CAB_42_10001-11000.csv",
+            "dataFiles/exp2/CAB/CAB_38_10001-11000.csv",
+            "dataFiles/exp2/CAB/CAB_34_10001-11000.csv",
     },
     };
 
-    static String[] EXP2_R_REMOVE_RMVD_DATA = new String[]{
-            "dataFiles/exp2/varingR/10001-11000_del.csv",
+    static String[][] EXP2_R_REMOVE_RMVD_DATA = new String[][]{{
+            "dataFiles/exp2/CAB/CAB_54_10001-11000_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11000_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11000_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11000_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11000_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11000_del.csv",
+    }
     };
 
     // varying r
     static String[][] EXP2_r_INSERT_BASE_DATA = new String[][]{{
-            "dataFiles/exp2/r/CAB_54_10000.csv",
-            "dataFiles/exp2/r/CAB_54_11000.csv",
-            "dataFiles/exp2/r/CAB_54_12000.csv",
-            "dataFiles/exp2/r/CAB_54_13000.csv",
-            "dataFiles/exp2/r/CAB_54_14000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10000.csv",
+            "dataFiles/exp2/CAB/CAB_54_11000.csv",
+            "dataFiles/exp2/CAB/CAB_54_12000.csv",
+            "dataFiles/exp2/CAB/CAB_54_13000.csv",
+            "dataFiles/exp2/CAB/CAB_54_14000.csv",
     },
     };
 
     static String[][] EXP2_r_INSERT_BASE_DIFF = new String[][]{{
-            "dataFiles/exp2/r/CAB_54_10000.txt",
-            "dataFiles/exp2/r/CAB_54_11000.txt",
-            "dataFiles/exp2/r/CAB_54_12000.txt",
-            "dataFiles/exp2/r/CAB_54_13000.txt",
-            "dataFiles/exp2/r/CAB_54_14000.txt",
+            "dataFiles/exp2/CAB/CAB_54_10000.txt",
+            "dataFiles/exp2/CAB/CAB_54_11000.txt",
+            "dataFiles/exp2/CAB/CAB_54_12000.txt",
+            "dataFiles/exp2/CAB/CAB_54_13000.txt",
+            "dataFiles/exp2/CAB/CAB_54_14000.txt",
     },
     };
 
     static String[][] EXP2_r_INSERT_ISRT_DATA = new String[][]{{
-            "dataFiles/exp2/r/CAB_54_10001-11000.csv",
-            "dataFiles/exp2/r/CAB_54_11001-12100.csv",
-            "dataFiles/exp2/r/CAB_54_12001-13200.csv",
-            "dataFiles/exp2/r/CAB_54_13001-14300.csv",
-            "dataFiles/exp2/r/CAB_54_14001-15400.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11000.csv",
+            "dataFiles/exp2/CAB/CAB_54_11001-12100.csv",
+            "dataFiles/exp2/CAB/CAB_54_12001-13200.csv",
+            "dataFiles/exp2/CAB/CAB_54_13001-14300.csv",
+            "dataFiles/exp2/CAB/CAB_54_14001-15400.csv",
     },
     };
 
     static String[][] EXP2_r_REMOVE_RMVD_DATA = new String[][]{{
-            "dataFiles/exp2/r/CAB_54_10001-11000_del.csv",
-            "dataFiles/exp2/r/CAB_54_11001-12100_del.csv",
-            "dataFiles/exp2/r/CAB_54_12001-13200_del.csv",
-            "dataFiles/exp2/r/CAB_54_13001-14300_del.csv",
-            "dataFiles/exp2/r/CAB_54_14001-15400_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11000_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_11001-12100_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_12001-13200_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_13001-14300_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_14001-15400_del.csv",
     },
     };
 
     // varying delta r
-    static String[] EXP2_delta_r_INSERT_BASE_DATA = new String[]{
-            "dataFiles/exp2/delta_r/CAB_54_10000.csv",
+    static String[][] EXP2_delta_r_INSERT_BASE_DATA = new String[][]{{
+            "dataFiles/exp2/CAB/CAB_54_10000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10000.csv",
+    }
     };
 
-    static String[] EXP2_delta_r_INSERT_BASE_DIFF = new String[]{
-            "dataFiles/exp2/delta_r/CAB_54_10000.txt",
+    static String[][] EXP2_delta_r_INSERT_BASE_DIFF = new String[][]{{
+            "dataFiles/exp2/CAB/CAB_54_10000.txt",
+            "dataFiles/exp2/CAB/CAB_54_10000.txt",
+            "dataFiles/exp2/CAB/CAB_54_10000.txt",
+            "dataFiles/exp2/CAB/CAB_54_10000.txt",
+            "dataFiles/exp2/CAB/CAB_54_10000.txt",
+    }
     };
 
     static String[][] EXP2_delta_r_INSERT_ISRT_DATA = new String[][]{{
-            "dataFiles/exp2/delta_r/CAB_54_10001-11000.csv",
-            "dataFiles/exp2/delta_r/CAB_54_10001-12000.csv",
-            "dataFiles/exp2/delta_r/CAB_54_10001-13000.csv",
-            "dataFiles/exp2/delta_r/CAB_54_10001-14000.csv",
-            "dataFiles/exp2/delta_r/CAB_54_10001-15000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-12000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-13000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-14000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-15000.csv",
     },
     };
 
     static String[][] EXP2_delta_r_REMOVE_RMVD_DATA = new String[][]{{
-            "dataFiles/exp2/delta_r/CAB_54_10001-11000_del.csv",
-            "dataFiles/exp2/delta_r/CAB_54_10001-12000_del.csv",
-            "dataFiles/exp2/delta_r/CAB_54_10001-13000_del.csv",
-            "dataFiles/exp2/delta_r/CAB_54_10001-14000_del.csv",
-            "dataFiles/exp2/delta_r/CAB_54_10001-15000_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11000_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-12000_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-13000_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-14000_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-15000_del.csv",
 
     },
     };
 
     // varying ratio lambda
-    static String[] EXP2_LAMBDA_INSERT_BASE_DATA = new String[]{
-            "dataFiles/exp2/lambda/CAB_54_10000.csv",
+    static String[][] EXP2_LAMBDA_INSERT_BASE_DATA = new String[][]{{
+            "dataFiles/exp2/CAB/CAB_54_10000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10000.csv",
+    }
     };
 
-    static String[] EXP2_LAMBDA_INSERT_BASE_DIFF = new String[]{
-            "dataFiles/exp2/lambda/CAB_54_10000.txt",
+    static String[][] EXP2_LAMBDA_INSERT_BASE_DIFF = new String[][]{{
+            "dataFiles/exp2/CAB/CAB_54_10000.txt",
+            "dataFiles/exp2/CAB/CAB_54_10000.txt",
+            "dataFiles/exp2/CAB/CAB_54_10000.txt",
+            "dataFiles/exp2/CAB/CAB_54_10000.txt",
+    }
     };
 
     static String[][] EXP2_LAMBDA_INSERT_ISRT_DATA = new String[][]{{
             "",
-            "dataFiles/exp2/lambda/CAB_54_10001-10500.csv",
-            "dataFiles/exp2/lambda/CAB_54_10001-11000.csv",
-            "dataFiles/exp2/lambda/CAB_54_10001-11500.csv",
-            "dataFiles/exp2/lambda/CAB_54_10001-12000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-10500.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11500.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-12000.csv",
     },
     };
 
     static String[][] EXP2_LAMBDA_REMOVE_RMVD_DATA = new String[][]{{
-            "dataFiles/exp2/lambda/CAB_54_8001-10000_del.csv",
-            "dataFiles/exp2/lambda/CAB_54_9001-10500_del.csv",
-            "dataFiles/exp2/lambda/CAB_54_10001-11000_del.csv",
-            "dataFiles/exp2/lambda/CAB_54_11001-11500_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_8001-10000_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_9001-10500_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11000_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_11001-11500_del.csv",
             "",
     },
     };
@@ -707,38 +732,38 @@ public class DataFp {
     /* exp 3: time decomposition */
 
     static String[][] EXP3_INSERT_BASE_DATA = new String[][]{{
-            "dataFiles/exp2/r/CAB_54_10000.csv",
-            "dataFiles/exp2/r/CAB_54_11000.csv",
-            "dataFiles/exp2/r/CAB_54_12000.csv",
-            "dataFiles/exp2/r/CAB_54_13000.csv",
-            "dataFiles/exp2/r/CAB_54_14000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10000.csv",
+            "dataFiles/exp2/CAB/CAB_54_11000.csv",
+            "dataFiles/exp2/CAB/CAB_54_12000.csv",
+            "dataFiles/exp2/CAB/CAB_54_13000.csv",
+            "dataFiles/exp2/CAB/CAB_54_14000.csv",
     },
     };
 
     static String[][] EXP3_INSERT_BASE_DIFF = new String[][]{{
-            "dataFiles/exp2/r/CAB_54_10000.txt",
-            "dataFiles/exp2/r/CAB_54_11000.txt",
-            "dataFiles/exp2/r/CAB_54_12000.txt",
-            "dataFiles/exp2/r/CAB_54_13000.txt",
-            "dataFiles/exp2/r/CAB_54_14000.txt",
+            "dataFiles/exp2/CAB/CAB_54_10000.txt",
+            "dataFiles/exp2/CAB/CAB_54_11000.txt",
+            "dataFiles/exp2/CAB/CAB_54_12000.txt",
+            "dataFiles/exp2/CAB/CAB_54_13000.txt",
+            "dataFiles/exp2/CAB/CAB_54_14000.txt",
     },
     };
 
     static String[][] EXP3_INSERT_ISRT_DATA = new String[][]{{
-            "dataFiles/exp2/r/CAB_54_10001-11000.csv",
-            "dataFiles/exp2/r/CAB_54_11001-12100.csv",
-            "dataFiles/exp2/r/CAB_54_12001-13200.csv",
-            "dataFiles/exp2/r/CAB_54_13001-14300.csv",
-            "dataFiles/exp2/r/CAB_54_14001-15400.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11000.csv",
+            "dataFiles/exp2/CAB/CAB_54_11001-12100.csv",
+            "dataFiles/exp2/CAB/CAB_54_12001-13200.csv",
+            "dataFiles/exp2/CAB/CAB_54_13001-14300.csv",
+            "dataFiles/exp2/CAB/CAB_54_14001-15400.csv",
     },
     };
 
     static String[][] EXP3_REMOVE_RMVD_DATA = new String[][]{{
-            "dataFiles/exp2/r/CAB_54_10001-11000_del.csv",
-            "dataFiles/exp2/r/CAB_54_11001-12100_del.csv",
-            "dataFiles/exp2/r/CAB_54_12001-13200_del.csv",
-            "dataFiles/exp2/r/CAB_54_13001-14300_del.csv",
-            "dataFiles/exp2/r/CAB_54_14001-15400_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11000_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_11001-12100_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_12001-13200_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_13001-14300_del.csv",
+            "dataFiles/exp2/CAB/CAB_54_14001-15400_del.csv",
     },
     };
 

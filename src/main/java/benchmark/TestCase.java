@@ -18,88 +18,108 @@ import static benchmark.DataFp.*;
 
 public class TestCase {
 
-    class exp2Res {
+    class Res1 {
+        double diffTime;
+        double hsTime;
+        double totalTime;
 
+        public Res1(double diffTime, double totalTime) {
+            this.diffTime = diffTime;
+            this.hsTime = totalTime - diffTime;
+            this.totalTime = totalTime;
+        }
     }
 
-    public double insertThenDelete(String baseDataFp, String baseDiffFp, String isrtDataFp, String rmvdDataFp) {
+    Res1 insertThenDelete(String baseDataFp, String baseDiffFp, String isrtDataFp, String rmvdDataFp) {
         // 1 initiate
         DiffConnector diffConnector = initiateDiff(baseDataFp, baseDiffFp);
         DynHSConnector fdConnector = initiateFd(diffConnector.nElements, diffConnector.getDiffSet());
 
         // 2 load inserted and removed data
-        List<List<String>> insertData = DataIO.readCsvFile(isrtDataFp);
-        List<Integer> removedData = DataIO.readRemoveFile(rmvdDataFp);
+        List<List<String>> insertData = isrtDataFp == null || isrtDataFp.isEmpty() ? new ArrayList<>() : DataIO.readCsvFile(isrtDataFp);
+        List<Integer> removedData = rmvdDataFp == null || rmvdDataFp.isEmpty() ? new ArrayList<>() : DataIO.readRemoveFile(rmvdDataFp);
 
         // 3 record running time
-        System.out.println("[insert Then Delete]...");
+        System.out.println("  [Insert Then Delete]...");
         long startTime = System.nanoTime();
 
-        List<Long> newDiffs = diffConnector.insertData(insertData);
-        fdConnector.insertSubsets(newDiffs);
+        if (!insertData.isEmpty()) {
+            List<Long> newDiffs = diffConnector.insertData(insertData);
+            fdConnector.insertSubsets(newDiffs);
+        }
         double diffTime = (double) (System.nanoTime() - startTime) / 1000000;
 
-        Set<Long> removedDiffs = diffConnector.removeData(removedData);
-        List<Long> leftDiffs = diffConnector.getDiffSet();
-        fdConnector.removeSubsets(leftDiffs, removedDiffs);
+        if (!removedData.isEmpty()) {
+            Set<Long> removedDiffs = diffConnector.removeData(removedData);
+            List<Long> leftDiffs = diffConnector.getDiffSet();
+            fdConnector.removeSubsets(leftDiffs, removedDiffs);
+        }
+        double totalTime = (double) (System.nanoTime() - startTime) / 1000000;
 
-        return (double) (System.nanoTime() - startTime) / 1000000;
+        return new Res1(diffTime, totalTime);
+    }
+
+    List<Res1> insertThenDelete(String[] baseDataFp, String[] baseDiffFp, String[] isrtDataFp, String[] rmvdDataFp) {
+        // preheat
+        insertThenDelete(baseDataFp[0], baseDiffFp[0], isrtDataFp[0], rmvdDataFp[0]);
+
+        int N = baseDataFp.length;
+        List<Res1> results = new ArrayList<>(N);
+        for (int i = 0; i < N; i++) {
+            Res1 res = insertThenDelete(baseDataFp[i], baseDiffFp[i], isrtDataFp[i], rmvdDataFp[i]);
+            results.add(res);
+        }
+        return results;
+    }
+
+    void printExp2Res(List<Res1> results, String[] dataFiles) {
+        System.out.println("  No.\tTime(ms)\tData File");
+        for (int i = 0; i < results.size(); i++)
+            System.out.printf("  %d\t%15.3f\t\t%s\n", i, results.get(i).totalTime, dataFiles[i]);
     }
 
     public void exp2_R(int d) {
         System.out.println("[EXP 2] Varying R");
-        System.out.println("  No.\tHS\t\tTime(ms)\tData File");
-
-        // preheat
-        insertThenDelete(EXP2_R_INSERT_BASE_DATA[d][0], EXP2_R_INSERT_BASE_DIFF[d][0], EXP2_R_INSERT_ISRT_DATA[d][0], EXP2_R_REMOVE_RMVD_DATA[d]);
-
-        int N = EXP2_R_INSERT_BASE_DATA[d].length;
-        for (int i = 0; i < N; i++) {
-            double runtime = insertThenDelete(EXP2_R_INSERT_BASE_DATA[d][i], EXP2_R_INSERT_BASE_DIFF[d][i], EXP2_R_INSERT_ISRT_DATA[d][i], EXP2_R_REMOVE_RMVD_DATA[d]);
-            System.out.printf("  %d\t%10.3f\t\t%s\n", i, runtime, EXP2_R_INSERT_BASE_DATA[d][i]);
-        }
+        List<Res1> results = insertThenDelete(EXP2_R_INSERT_BASE_DATA[d], EXP2_R_INSERT_BASE_DIFF[d], EXP2_R_INSERT_ISRT_DATA[d], EXP2_R_REMOVE_RMVD_DATA[d]);
+        printExp2Res(results, EXP2_R_INSERT_BASE_DATA[d]);
     }
 
     public void exp2_r(int d) {
         System.out.println("[EXP 2] Varying r");
-        System.out.println("  No.\tHS\t\tTime(ms)\tData File");
-
-        insertThenDelete(EXP2_r_INSERT_BASE_DATA[d][0], EXP2_r_INSERT_BASE_DIFF[d][0], EXP2_r_INSERT_ISRT_DATA[d][0], EXP2_r_REMOVE_RMVD_DATA[d][0]);
-
-        int N = EXP2_r_INSERT_BASE_DATA[d].length;
-        for (int i = 0; i < N; i++) {
-            double runtime = insertThenDelete(EXP2_r_INSERT_BASE_DATA[d][i], EXP2_r_INSERT_BASE_DIFF[d][i], EXP2_r_INSERT_ISRT_DATA[d][i], EXP2_r_REMOVE_RMVD_DATA[d][i]);
-            System.out.printf("  %d\t%10.3f\t\t%s\n", i, runtime, EXP2_r_INSERT_BASE_DATA[d][i]);
-        }
+        List<Res1> results = insertThenDelete(EXP2_r_INSERT_BASE_DATA[d], EXP2_r_INSERT_BASE_DIFF[d], EXP2_r_INSERT_ISRT_DATA[d], EXP2_r_REMOVE_RMVD_DATA[d]);
+        printExp2Res(results, EXP2_r_INSERT_BASE_DATA[d]);
     }
 
     public void exp2_delta_r(int d) {
         System.out.println("[EXP 2] Varying delta r");
-        System.out.println("  No.\tHS\t\tTime(ms)\tData File");
-
-        insertThenDelete(EXP2_delta_r_INSERT_BASE_DATA[d], EXP2_delta_r_INSERT_BASE_DIFF[d], EXP2_delta_r_INSERT_ISRT_DATA[d][0], EXP2_delta_r_REMOVE_RMVD_DATA[d][0]);
-
-        int N = EXP2_delta_r_INSERT_ISRT_DATA[d].length;
-        for (int i = 0; i < N; i++) {
-            double runtime = insertThenDelete(EXP2_delta_r_INSERT_BASE_DATA[d], EXP2_delta_r_INSERT_BASE_DIFF[d], EXP2_delta_r_INSERT_ISRT_DATA[d][i], EXP2_delta_r_REMOVE_RMVD_DATA[d][i]);
-            System.out.printf("  %d\t%10.3f\t\t%s\n", i, runtime, EXP2_delta_r_INSERT_ISRT_DATA[d][i]);
-        }
+        List<Res1> results = insertThenDelete(EXP2_delta_r_INSERT_BASE_DATA[d], EXP2_delta_r_INSERT_BASE_DIFF[d], EXP2_delta_r_INSERT_ISRT_DATA[d], EXP2_delta_r_REMOVE_RMVD_DATA[d]);
+        printExp2Res(results, EXP2_delta_r_INSERT_ISRT_DATA[d]);
     }
 
+
     public void exp2_lambda(int d) {
-        System.out.println("[EXP 2] Varying lambda");
-        System.out.println("  No.\tHS\t\tTime(ms)\tData File");
-
-        insertThenDelete(EXP2_LAMBDA_INSERT_BASE_DATA[d], EXP2_LAMBDA_INSERT_BASE_DIFF[d], EXP2_LAMBDA_INSERT_ISRT_DATA[d][0], EXP2_LAMBDA_REMOVE_RMVD_DATA[d][0]);
-
-        int N = EXP2_LAMBDA_INSERT_ISRT_DATA[d].length;
-        for (int i = 0; i < N; i++) {
-            double runtime = insertThenDelete(EXP2_LAMBDA_INSERT_BASE_DATA[d], EXP2_LAMBDA_INSERT_BASE_DIFF[d], EXP2_LAMBDA_INSERT_ISRT_DATA[d][i], EXP2_LAMBDA_REMOVE_RMVD_DATA[d][i]);
-            System.out.printf("  %d\t%10.3f\t\t%s\n", i, runtime, EXP2_LAMBDA_INSERT_ISRT_DATA[d][i]);
-        }
+        System.out.println("\n[EXP 2] Varying Ratio Lambda");
+        List<Res1> results = insertThenDelete(EXP2_LAMBDA_INSERT_BASE_DATA[d], EXP2_LAMBDA_INSERT_BASE_DIFF[d], EXP2_LAMBDA_INSERT_ISRT_DATA[d], EXP2_LAMBDA_REMOVE_RMVD_DATA[d]);
+        printExp2Res(results, EXP2_LAMBDA_INSERT_ISRT_DATA[d]);
     }
 
     public void exp3(int d) {
+        System.out.println("\n[EXP 3] Time Decomposition");
+        List<Res1> results = insertThenDelete(EXP3_INSERT_BASE_DATA[d], EXP3_INSERT_BASE_DIFF[d], EXP3_INSERT_ISRT_DATA[d], EXP3_REMOVE_RMVD_DATA[d]);
+        printExp3Res(results, EXP3_INSERT_BASE_DATA[d]);
+    }
+
+    void printExp3Res(List<Res1> results, String[] dataFiles) {
+        System.out.println("  No.\tDiff Time(ms)\tHS Time(ms)\tData File");
+        for (int i = 0; i < results.size(); i++)
+            System.out.printf("  %d\t%15.3f\t%15.3f\t\t%s\n", i, results.get(i).diffTime, results.get(i).hsTime, dataFiles[i]);
+    }
+
+    public void exp4_delta_r(int d) {
+
+    }
+
+    public void exp4_round(int d) {
 
     }
 
@@ -422,13 +442,13 @@ public class TestCase {
 
     DiffConnector initiateDiff(String BASE_DATA_INPUT, String BASE_DIFF_INPUT) {
         // load base data
-        System.out.println("[INITIALIZING]...");
+        System.out.println("  [INITIALIZING]...");
         List<List<String>> csvData = DataIO.readCsvFile(BASE_DATA_INPUT);
 
         // initiate pli and differenceSet
         DiffConnector diffConnector = new DiffConnector();
         List<Long> initDiffSets = diffConnector.generatePliAndDiff(csvData, BASE_DIFF_INPUT);
-        System.out.println("  # of initial Diff: " + initDiffSets.size());
+        System.out.println("    # of initial Diff: " + initDiffSets.size());
 
         return diffConnector;
     }
@@ -438,7 +458,7 @@ public class TestCase {
         DynHSConnector fdConnector = new DynHSConnector();
         //FdConnector fdConnector = nElements <= 32 ? new BhmmcsFdConnector() : new BhmmcsFdConnector64();
         fdConnector.initiate(nElements, initDiffSets);
-        System.out.println("  # of initial FD: " + fdConnector.getMinFDs().stream().map(List::size).reduce(0, Integer::sum));
+        System.out.println("    # of initial FD: " + fdConnector.getMinFDs().stream().map(List::size).reduce(0, Integer::sum));
 
         return fdConnector;
     }
