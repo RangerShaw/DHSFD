@@ -7,6 +7,7 @@ import com.csvreader.CsvReader;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DataIO {
 
@@ -37,6 +38,11 @@ public class DataIO {
             e.printStackTrace();
         }
         return res;
+    }
+
+    public static List<Long> readDiffMapToList(int N, String dsFilePath) {
+        Map<BitSet, Long> diffMap = readDiffMap(dsFilePath);
+        return diffMap.keySet().stream().map(bs -> Utils.bitsetToLong(N, bs)).collect(Collectors.toList());
     }
 
     public static Map<BitSet, Long> readDiffMap(String dsFilePath) {

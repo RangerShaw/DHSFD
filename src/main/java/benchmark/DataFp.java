@@ -54,6 +54,7 @@ public class DataFp {
             63,
     };
 
+
     /* exp1: DHSFD runtimes */
 
     static String[][] EXP1_INSERT_BASE_DATA = new String[][]{{
@@ -91,32 +92,32 @@ public class DataFp {
 
     // varying R
     static String[][] EXP2_R_INSERT_BASE_DATA = new String[][]{{
-            "dataFiles/exp2/CAB/CAB_54_10000.csv",
-            "dataFiles/exp2/CAB/CAB_50_10000.csv",
-            "dataFiles/exp2/CAB/CAB_46_10000.csv",
-            "dataFiles/exp2/CAB/CAB_42_10000.csv",
-            "dataFiles/exp2/CAB/CAB_38_10000.csv",
             "dataFiles/exp2/CAB/CAB_34_10000.csv",
+            "dataFiles/exp2/CAB/CAB_38_10000.csv",
+            "dataFiles/exp2/CAB/CAB_42_10000.csv",
+            "dataFiles/exp2/CAB/CAB_46_10000.csv",
+            "dataFiles/exp2/CAB/CAB_50_10000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10000.csv",
     },
     };
 
     static String[][] EXP2_R_INSERT_BASE_DIFF = new String[][]{{
-            "dataFiles/exp2/CAB/CAB_54_10000.txt",
-            "dataFiles/exp2/CAB/CAB_50_10000.txt",
-            "dataFiles/exp2/CAB/CAB_46_10000.txt",
-            "dataFiles/exp2/CAB/CAB_42_10000.txt",
-            "dataFiles/exp2/CAB/CAB_38_10000.txt",
             "dataFiles/exp2/CAB/CAB_34_10000.txt",
+            "dataFiles/exp2/CAB/CAB_38_10000.txt",
+            "dataFiles/exp2/CAB/CAB_42_10000.txt",
+            "dataFiles/exp2/CAB/CAB_46_10000.txt",
+            "dataFiles/exp2/CAB/CAB_50_10000.txt",
+            "dataFiles/exp2/CAB/CAB_54_10000.txt",
     },
     };
 
     static String[][] EXP2_R_INSERT_ISRT_DATA = new String[][]{{
-            "dataFiles/exp2/CAB/CAB_54_10001-11000.csv",
-            "dataFiles/exp2/CAB/CAB_50_10001-11000.csv",
-            "dataFiles/exp2/CAB/CAB_46_10001-11000.csv",
-            "dataFiles/exp2/CAB/CAB_42_10001-11000.csv",
-            "dataFiles/exp2/CAB/CAB_38_10001-11000.csv",
             "dataFiles/exp2/CAB/CAB_34_10001-11000.csv",
+            "dataFiles/exp2/CAB/CAB_38_10001-11000.csv",
+            "dataFiles/exp2/CAB/CAB_42_10001-11000.csv",
+            "dataFiles/exp2/CAB/CAB_46_10001-11000.csv",
+            "dataFiles/exp2/CAB/CAB_50_10001-11000.csv",
+            "dataFiles/exp2/CAB/CAB_54_10001-11000.csv",
     },
     };
 
