@@ -65,7 +65,6 @@ public class TestCase {
     }
 
     DynHSConnector initiateFd(int nElements, List<Long> initDiffSets) {
-        // initiate FD
         DynHSConnector fdConnector = new DynHSConnector();
         fdConnector.initiate(nElements, initDiffSets);
         System.out.println("    # of initial FD: " + fdConnector.getMinFDs().stream().map(List::size).reduce(0, Integer::sum));
@@ -119,11 +118,10 @@ public class TestCase {
     List<RuntimeResult> insertThenDelete(String[] baseDataFp, String[] baseDiffFp, String[] isrtDataFp, String[] rmvdDataFp) {
         assert baseDataFp.length == baseDiffFp.length && baseDataFp.length == isrtDataFp.length && baseDataFp.length == rmvdDataFp.length;
 
-        //insertThenDelete(baseDataFp[0], baseDiffFp[0], isrtDataFp[0], rmvdDataFp[0]);   // preheat
+        insertThenDelete(baseDataFp[0], baseDiffFp[0], isrtDataFp[0], rmvdDataFp[0]);   // preheat
 
         List<RuntimeResult> results = new ArrayList<>();
-        //for (int i = 0; i < baseDataFp.length; i++) {
-            for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < baseDataFp.length; i++) {
             RuntimeResult res = insertThenDelete(baseDataFp[i], baseDiffFp[i], isrtDataFp[i], rmvdDataFp[i]);
             results.add(res);
         }
@@ -329,6 +327,8 @@ public class TestCase {
         }
         return results;
     }
+
+
 
 
 
