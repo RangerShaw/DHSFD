@@ -86,8 +86,6 @@ public class DataFp {
     };
 
 
-
-
     /* exp 2: scalability */
 
     // varying R
@@ -244,6 +242,7 @@ public class DataFp {
 
     /* exp 3: time decomposition */
 
+    // reuse data files of exp 2
     static String[][] EXP3_INSERT_BASE_DATA = new String[][]{{
             "dataFiles/exp2/CAB/CAB_54_10000.csv",
             "dataFiles/exp2/CAB/CAB_54_11000.csv",
@@ -280,6 +279,7 @@ public class DataFp {
     },
     };
 
+
     /* exp 4: time decomposition */
 
     // varying delta r_i
@@ -313,39 +313,18 @@ public class DataFp {
     static String[][][] EXP4_r_REMOVE_RMVD_DATA = new String[][][]{{{
             "dataFiles/exp4/flights/flights_204001-208000_del.csv",
     }, {
-            "dataFiles/exp4/flights/flights_206001-208000_del.csv",
+            "dataFiles/exp4/flights/flights_202001-204000_del.csv",
             "dataFiles/exp4/flights/flights_204001-206000_del.csv",
     }, {
-            "dataFiles/exp4/flights/flights_207001-208000_del.csv",
-            "dataFiles/exp4/flights/flights_206001-207000_del.csv",
-            "dataFiles/exp4/flights/flights_205001-206000_del.csv",
+            "dataFiles/exp4/flights/flights_201001-202000_del.csv",
+            "dataFiles/exp4/flights/flights_202001-203000_del.csv",
+            "dataFiles/exp4/flights/flights_203001-204000_del.csv",
             "dataFiles/exp4/flights/flights_204001-205000_del.csv",
     }},
     };
 
 
     /* exp6: DynHS V.S. MMCS */
-
-//    public static void genExp6FilePath() {
-//        int N = DATASETS.length;
-//
-//        EXP6_INSERT_BASE_EDGES = new String[N];
-//        EXP6_INSERT_BATCH_EDGES = new String[N][10];
-//        EXP6_INSERT_ISRT_EDGES = new String[N][10];
-//        EXP6_REMOVE_BASE_EDGES = new String[N];
-//
-//        for (int i = 0; i < N; i++) {
-//            String prefix = "dataFiles/exp6/" + DATASETS[i] + "/" + DATASETS[i];
-//
-//            EXP6_INSERT_BASE_EDGES[i] = prefix + "_50.txt";
-//            for (int j = 1; j <= 10; j++) {
-//                EXP6_INSERT_ISRT_EDGES[i][j - 1] = prefix + "_insert_50-" + (50 + j * 5) + ".txt";
-//                EXP6_INSERT_BATCH_EDGES[i][j - 1] = prefix + "_" + (50 + j * 5) + ".txt";
-//            }
-//
-//            EXP6_REMOVE_BASE_EDGES[i] = prefix + "_100.txt";
-//        }
-//    }
 
     // INSERT
     static String[] EXP6_INSERT_BASE_EDGES = new String[]{

@@ -11,8 +11,8 @@ public class Benchmark {
 
         /* exp 2 */
         testCase.exp2_R(dataset);           // varying R
-        testCase.exp2_r(dataset);           // varying r
         testCase.exp2_delta_r(dataset);     // varying delta r
+        testCase.exp2_r(dataset);           // varying r
         testCase.exp2_lambda(dataset);      // varying ratio lambda
 
         /* exp 3 */

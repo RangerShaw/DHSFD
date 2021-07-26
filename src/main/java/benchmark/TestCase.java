@@ -11,32 +11,45 @@ import util.DataIO;
 import util.Utils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static benchmark.DataFp.*;
+import static util.Utils.genEdgeRhs;
 
 public class TestCase {
 
-    class runtimeResult {
+    static class RuntimeResult {
         double diffTime;
         double hsTime;
         double totalTime;
 
-        public runtimeResult(double diffTime, double hsTime) {
+        public RuntimeResult(double diffTime, double hsTime) {
             this.diffTime = diffTime;
             this.hsTime = hsTime;
             this.totalTime = diffTime + hsTime;
         }
 
-        public runtimeResult(double totalTime) {
+        public RuntimeResult(double totalTime) {
+            this.diffTime = 0;
+            this.hsTime = 0;
             this.totalTime = totalTime;
         }
 
         public double getTotalTime() {
             return totalTime;
         }
+
+        public static RuntimeResult sum(List<RuntimeResult> results) {
+            RuntimeResult res = new RuntimeResult(0);
+            for (RuntimeResult result : results) {
+                res.diffTime += result.diffTime;
+                res.hsTime += result.hsTime;
+                res.totalTime += result.totalTime;
+            }
+            return res;
+        }
     }
+
 
     DiffConnector initiateDiff(String baseDataFp, String baseDiffFp) {
         // load base data
@@ -60,16 +73,10 @@ public class TestCase {
         return fdConnector;
     }
 
-    runtimeResult insertThenDelete(String baseDataFp, String baseDiffFp, String isrtDataFp, String rmvdDataFp) {
-        // 1 initiate
-        DiffConnector diffConnector = initiateDiff(baseDataFp, baseDiffFp);
-        DynHSConnector fdConnector = initiateFd(diffConnector.nElements, diffConnector.getDiffSet());
-
-        // 2 load inserted and removed data
+    RuntimeResult insertThenDelete(DiffConnector diffConnector, DynHSConnector fdConnector, String isrtDataFp, String rmvdDataFp) {
         List<List<String>> insertData = isrtDataFp == null || isrtDataFp.isEmpty() ? new ArrayList<>() : DataIO.readCsvFile(isrtDataFp);
         List<Integer> removedData = rmvdDataFp == null || rmvdDataFp.isEmpty() ? new ArrayList<>() : DataIO.readRemoveFile(rmvdDataFp);
 
-        // 3 record running time
         System.out.println("  [INSERT THEN DELETE]...");
         double diffTime = 0.0, hsTime = 0.0;
 
@@ -96,85 +103,117 @@ public class TestCase {
             hsTime += (double) (endTime - midTime) / 1000000;
         }
 
-        return new runtimeResult(diffTime, hsTime);
+        return new RuntimeResult(diffTime, hsTime);
     }
 
-    List<runtimeResult> insertThenDelete(String[] baseDataFp, String[] baseDiffFp, String[] isrtDataFp, String[] rmvdDataFp) {
-        // preheat
-        insertThenDelete(baseDataFp[0], baseDiffFp[0], isrtDataFp[0], rmvdDataFp[0]);
 
-        List<runtimeResult> results = new ArrayList<>();
-        for (int i = 0; i < baseDataFp.length; i++) {
-            runtimeResult res = insertThenDelete(baseDataFp[i], baseDiffFp[i], isrtDataFp[i], rmvdDataFp[i]);
+    RuntimeResult insertThenDelete(String baseDataFp, String baseDiffFp, String isrtDataFp, String rmvdDataFp) {
+        DiffConnector diffConnector = initiateDiff(baseDataFp, baseDiffFp);
+        DynHSConnector fdConnector = initiateFd(diffConnector.nElements, diffConnector.getDiffSet());
+        return insertThenDelete(diffConnector, fdConnector, isrtDataFp, rmvdDataFp);
+    }
+
+    /**
+     * initiate multiple times. for each initiation, insert and delete once
+     */
+    List<RuntimeResult> insertThenDelete(String[] baseDataFp, String[] baseDiffFp, String[] isrtDataFp, String[] rmvdDataFp) {
+        assert baseDataFp.length == baseDiffFp.length && baseDataFp.length == isrtDataFp.length && baseDataFp.length == rmvdDataFp.length;
+
+        //insertThenDelete(baseDataFp[0], baseDiffFp[0], isrtDataFp[0], rmvdDataFp[0]);   // preheat
+
+        List<RuntimeResult> results = new ArrayList<>();
+        //for (int i = 0; i < baseDataFp.length; i++) {
+            for (int i = 0; i < 1; i++) {
+            RuntimeResult res = insertThenDelete(baseDataFp[i], baseDiffFp[i], isrtDataFp[i], rmvdDataFp[i]);
             results.add(res);
         }
         return results;
     }
 
-    void printTotalTimes(List<runtimeResult> results, String[] dataFiles) {
-        System.out.println("  No.\tTime(ms)\t\tData File");
+    /**
+     * initiate once. insert and delete multiple times
+     */
+    RuntimeResult insertThenDelete(String baseDataFp, String baseDiffFp, String[] isrtDataFp, String[] rmvdDataFp) {
+        assert isrtDataFp.length == rmvdDataFp.length;
+
+        insertThenDelete(baseDataFp, baseDiffFp, isrtDataFp[0], rmvdDataFp[0]);         // preheat
+
+        DiffConnector diffConnector = initiateDiff(baseDataFp, baseDiffFp);
+        DynHSConnector fdConnector = initiateFd(diffConnector.nElements, diffConnector.getDiffSet());
+
+        List<RuntimeResult> results = new ArrayList<>();
+        for (int i = 0; i < isrtDataFp.length; i++) {
+            RuntimeResult res = insertThenDelete(diffConnector, fdConnector, isrtDataFp[i], rmvdDataFp[i]);
+            results.add(res);
+        }
+        return RuntimeResult.sum(results);
+    }
+
+    void printTotalTimes(List<RuntimeResult> results, String[] dataFiles) {
+        System.out.println("  No.\tTime(ms)\t\tKey File");
         for (int i = 0; i < results.size(); i++)
             System.out.printf("  %d\t%12.3f\t%s\n", i, results.get(i).totalTime, dataFiles[i]);
     }
 
-    void printDiffHsTimes(List<runtimeResult> results, String[] dataFiles) {
-        System.out.println("  No.\tDiff Time(ms)\tHS Time(ms)\t\tData File");
+    void printDiffHsTimes(List<RuntimeResult> results, String[] dataFiles) {
+        System.out.println("  No.\tDiff Time(ms)\tHS Time(ms)\t\tKey File");
         for (int i = 0; i < results.size(); i++)
             System.out.printf("  %d\t%12.3f\t%12.3f\t\t%s\n", i, results.get(i).diffTime, results.get(i).hsTime, dataFiles[i]);
     }
 
     public void exp1(int d) {
-        System.out.println("[EXP 1] DHSFD Runtime");
-        List<runtimeResult> results = insertThenDelete(EXP1_INSERT_BASE_DATA[d], EXP1_INSERT_BASE_DIFF[d], EXP1_INSERT_ISRT_DATA[d], EXP1_REMOVE_RMVD_DATA[d]);
+        System.out.println("\n[EXP 1] DHSFD Runtime");
+        List<RuntimeResult> results = insertThenDelete(EXP1_INSERT_BASE_DATA[d], EXP1_INSERT_BASE_DIFF[d], EXP1_INSERT_ISRT_DATA[d], EXP1_REMOVE_RMVD_DATA[d]);
         printTotalTimes(results, EXP1_INSERT_ISRT_DATA[d]);
     }
 
     public void exp2_R(int d) {
-        System.out.println("[EXP 2] Varying R");
-        List<runtimeResult> results = insertThenDelete(EXP2_R_INSERT_BASE_DATA[d], EXP2_R_INSERT_BASE_DIFF[d], EXP2_R_INSERT_ISRT_DATA[d], EXP2_R_REMOVE_RMVD_DATA[d]);
+        System.out.println("\n[EXP 2] Varying R");
+        List<RuntimeResult> results = insertThenDelete(EXP2_R_INSERT_BASE_DATA[d], EXP2_R_INSERT_BASE_DIFF[d], EXP2_R_INSERT_ISRT_DATA[d], EXP2_R_REMOVE_RMVD_DATA[d]);
         printTotalTimes(results, EXP2_R_INSERT_BASE_DATA[d]);
     }
 
-    public void exp2_r(int d) {
-        System.out.println("[EXP 2] Varying r");
-        List<runtimeResult> results = insertThenDelete(EXP2_r_INSERT_BASE_DATA[d], EXP2_r_INSERT_BASE_DIFF[d], EXP2_r_INSERT_ISRT_DATA[d], EXP2_r_REMOVE_RMVD_DATA[d]);
-        printTotalTimes(results, EXP2_r_INSERT_BASE_DATA[d]);
+    public void exp2_delta_r(int d) {
+        System.out.println("\n[EXP 2] Varying delta r");
+        List<RuntimeResult> results = insertThenDelete(EXP2_delta_r_INSERT_BASE_DATA[d], EXP2_delta_r_INSERT_BASE_DIFF[d], EXP2_delta_r_INSERT_ISRT_DATA[d], EXP2_delta_r_REMOVE_RMVD_DATA[d]);
+        printTotalTimes(results, EXP2_delta_r_INSERT_ISRT_DATA[d]);
     }
 
-    public void exp2_delta_r(int d) {
-        System.out.println("[EXP 2] Varying delta r");
-        List<runtimeResult> results = insertThenDelete(EXP2_delta_r_INSERT_BASE_DATA[d], EXP2_delta_r_INSERT_BASE_DIFF[d], EXP2_delta_r_INSERT_ISRT_DATA[d], EXP2_delta_r_REMOVE_RMVD_DATA[d]);
-        printTotalTimes(results, EXP2_delta_r_INSERT_ISRT_DATA[d]);
+    public void exp2_r(int d) {
+        System.out.println("\n[EXP 2] Varying r");
+        List<RuntimeResult> results = insertThenDelete(EXP2_r_INSERT_BASE_DATA[d], EXP2_r_INSERT_BASE_DIFF[d], EXP2_r_INSERT_ISRT_DATA[d], EXP2_r_REMOVE_RMVD_DATA[d]);
+        printTotalTimes(results, EXP2_r_INSERT_BASE_DATA[d]);
     }
 
     public void exp2_lambda(int d) {
         System.out.println("\n[EXP 2] Varying Ratio Lambda");
-        List<runtimeResult> results = insertThenDelete(EXP2_LAMBDA_INSERT_BASE_DATA[d], EXP2_LAMBDA_INSERT_BASE_DIFF[d], EXP2_LAMBDA_INSERT_ISRT_DATA[d], EXP2_LAMBDA_REMOVE_RMVD_DATA[d]);
+        List<RuntimeResult> results = insertThenDelete(EXP2_LAMBDA_INSERT_BASE_DATA[d], EXP2_LAMBDA_INSERT_BASE_DIFF[d], EXP2_LAMBDA_INSERT_ISRT_DATA[d], EXP2_LAMBDA_REMOVE_RMVD_DATA[d]);
         printTotalTimes(results, EXP2_LAMBDA_INSERT_ISRT_DATA[d]);
     }
 
     public void exp3_r(int d) {
         System.out.println("\n[EXP 3] Time Decomposition");
-        List<runtimeResult> results = insertThenDelete(EXP3_INSERT_BASE_DATA[d], EXP3_INSERT_BASE_DIFF[d], EXP3_INSERT_ISRT_DATA[d], EXP3_REMOVE_RMVD_DATA[d]);
+        List<RuntimeResult> results = insertThenDelete(EXP3_INSERT_BASE_DATA[d], EXP3_INSERT_BASE_DIFF[d], EXP3_INSERT_ISRT_DATA[d], EXP3_REMOVE_RMVD_DATA[d]);
         printDiffHsTimes(results, EXP3_INSERT_BASE_DATA[d]);
     }
 
     public void exp4_delta_ri(int d) {
         System.out.println("\n[EXP 4] Varying delta r_i");
-        List<Double> results = new ArrayList<>();
+        List<RuntimeResult> results = new ArrayList<>();
         for (int i = 0; i < EXP4_r_INSERT_ISRT_DATA.length; i++) {
-            List<runtimeResult> res = insertThenDelete(EXP4_r_INSERT_BASE_DATA[d], EXP4_r_INSERT_BASE_DIFF[d], EXP4_r_INSERT_ISRT_DATA[d][i], EXP4_r_REMOVE_RMVD_DATA[d][i]);
-            results.add(res.stream().map(runtimeResult::getTotalTime).reduce(0.0, Double::sum));
+            RuntimeResult res = insertThenDelete(EXP4_r_INSERT_BASE_DATA[d][i], EXP4_r_INSERT_BASE_DIFF[d][i], EXP4_r_INSERT_ISRT_DATA[d][i], EXP4_r_REMOVE_RMVD_DATA[d][i]);
+            results.add(res);
         }
 
-        System.out.println("  No.\tTime(ms)\tdelta r\tData File");
+        System.out.println("  No.\tTime(ms)\tdelta r\t\tData File");
         int[] delta_r_i = new int[]{12, 6, 3, 2, 1};
         for (int i = 0; i < results.size(); i++)
-            System.out.printf("  %d\t%15.3f\t\t%d\t%s\n", i, results.get(i), delta_r_i[i], EXP4_r_INSERT_ISRT_DATA[d][i][0]);
+            System.out.printf("  %d\t%12.3f\t%d\t\t%s\n", i, results.get(i).getTotalTime(), delta_r_i[i], EXP4_r_INSERT_ISRT_DATA[d][i][0]);
     }
 
     public void exp4_round(int d) {
-        System.out.println("Results of exp4_round can be obtained from exp4_delta_ri.");
+        System.out.println("\n[EXP 4] Multiple round");
+        System.out.println("  Results of exp4_round can be obtained from exp4_delta_ri.");
     }
 
     public void exp6_insert(int d) {
@@ -182,22 +221,20 @@ public class TestCase {
         int N = N_ATTRIBUTES[d];
 
         System.out.println("===============================DynHS==============================");
-
         List<Long> baseEdges = DataIO.readDiffMapToList(N, EXP6_INSERT_BASE_EDGES[d]);
         Utils.sortLongSets(N, baseEdges);
 
-        // preheat
-        insertDynHS(N, baseEdges, EXP6_INSERT_ISRT_EDGES[d][0]);
+        insertDynHS(N, baseEdges, EXP6_INSERT_ISRT_EDGES[d][0]);                                // preheat
 
-        List<runtimeResult> results1 = new ArrayList<>();
+        List<RuntimeResult> results1 = new ArrayList<>();
         for (int i = 0; i < EXP6_INSERT_ISRT_EDGES[d].length; i++) {
-            double time = insertDynHS(N, baseEdges, EXP6_INSERT_ISRT_EDGES[d][i]);
-            results1.add(new runtimeResult(time));
+            RuntimeResult res = insertDynHS(N, baseEdges, EXP6_INSERT_ISRT_EDGES[d][i]);
+            results1.add(res);
         }
         printTotalTimes(results1, EXP6_INSERT_ISRT_EDGES[d]);
 
         System.out.println("\n===============================MMCS==============================");
-        List<runtimeResult> results2 = runMMCS(N, EXP6_INSERT_BATCH_EDGES[d]);
+        List<RuntimeResult> results2 = runMMCS(N, EXP6_INSERT_BATCH_EDGES[d]);
         printTotalTimes(results2, EXP6_INSERT_BATCH_EDGES[d]);
     }
 
@@ -206,36 +243,24 @@ public class TestCase {
         int N = N_ATTRIBUTES[d];
 
         System.out.println("===============================DynHS==============================");
-
         List<Long> baseEdges = DataIO.readDiffMapToList(N, EXP6_REMOVE_BASE_EDGES[d]);
         Utils.sortLongSets(N, baseEdges);
 
-        // preheat
-        removeDynHS(N, baseEdges, EXP6_REMOVE_LEFT_EDGES[d][0], EXP6_REMOVE_RMVD_EDGES[d][0]);
+        removeDynHS(N, baseEdges, EXP6_REMOVE_LEFT_EDGES[d][0], EXP6_REMOVE_RMVD_EDGES[d][0]);  // preheat
 
-        List<runtimeResult> results1 = new ArrayList<>();
+        List<RuntimeResult> results1 = new ArrayList<>();
         for (int i = 0; i < EXP6_REMOVE_LEFT_EDGES[d].length; i++) {
-            double time = removeDynHS(N, baseEdges, EXP6_REMOVE_LEFT_EDGES[d][i], EXP6_REMOVE_RMVD_EDGES[d][i]);
-            results1.add(new runtimeResult(time));
+            RuntimeResult res = removeDynHS(N, baseEdges, EXP6_REMOVE_LEFT_EDGES[d][i], EXP6_REMOVE_RMVD_EDGES[d][i]);
+            results1.add(res);
         }
         printTotalTimes(results1, EXP6_REMOVE_LEFT_EDGES[d]);
 
         System.out.println("\n===============================MMCS==============================");
-        List<runtimeResult> results2 = runMMCS(N, EXP6_REMOVE_LEFT_EDGES[d]);
+        List<RuntimeResult> results2 = runMMCS(N, EXP6_REMOVE_LEFT_EDGES[d]);
         printTotalTimes(results2, EXP6_REMOVE_LEFT_EDGES[d]);
     }
 
-
-    List<Long> genEdgeRhs(int e, List<Long> edges) {
-        List<Long> edgeRhs = new ArrayList<>();
-        long mask = 1L << e;
-        for (long edge : edges)
-            if ((edge & mask) != 0) edgeRhs.add(edge & ~mask);
-        return edgeRhs;
-    }
-
-
-    double insertDynHS(int N, List<Long> baseEdges, String isrtEdgeFp) {
+    RuntimeResult insertDynHS(int N, List<Long> baseEdges, String isrtEdgeFp) {
         List<Long> isrt = DataIO.readDiffMapToList(N, isrtEdgeFp);
         Utils.sortLongSets(N, isrt);
 
@@ -252,10 +277,10 @@ public class TestCase {
             totalTime += (double) (System.nanoTime() - startTime) / 1000000;
         }
 
-        return totalTime;
+        return new RuntimeResult(totalTime);
     }
 
-    double removeDynHS(int N, List<Long> baseEdges, String leftEdgeFp, String rmvdEdgeFp) {
+    RuntimeResult removeDynHS(int N, List<Long> baseEdges, String leftEdgeFp, String rmvdEdgeFp) {
         List<Long> left = DataIO.readDiffMapToList(N, leftEdgeFp);
         List<Long> rmvd = DataIO.readDiffMapToList(N, rmvdEdgeFp);
         Utils.sortLongSets(N, left);
@@ -275,10 +300,10 @@ public class TestCase {
             totalTime += (double) (System.nanoTime() - startTime) / 1000000;
         }
 
-        return totalTime;
+        return new RuntimeResult(totalTime);
     }
 
-    double runMMCS(int N, String EdgeFp) {
+    RuntimeResult runMMCS(int N, String EdgeFp) {
         List<Long> left = DataIO.readDiffMapToList(N, EdgeFp);
         Utils.sortLongSets(N, left);
 
@@ -291,17 +316,16 @@ public class TestCase {
             mmcs.initiate(leftRhs, true, true);
             totalTime += (double) (System.nanoTime() - startTime) / 1000000;
         }
-        return totalTime;
+        return new RuntimeResult(totalTime);
     }
 
-    List<runtimeResult> runMMCS(int N, String[] EdgeFp) {
-        // preheat
-        runMMCS(N, EdgeFp[0]);
+    List<RuntimeResult> runMMCS(int N, String[] EdgeFp) {
+        runMMCS(N, EdgeFp[0]);      // preheat
 
-        List<runtimeResult> results = new ArrayList<>();
+        List<RuntimeResult> results = new ArrayList<>();
         for (int i = 0; i < EdgeFp.length; i++) {
-            double totalTime = runMMCS(N, EdgeFp[i]);
-            results.add(new runtimeResult(totalTime));
+            RuntimeResult res = runMMCS(N, EdgeFp[i]);
+            results.add(res);
         }
         return results;
     }
@@ -352,7 +376,6 @@ public class TestCase {
             DataIO.printDiffMap(diffMap, DIFF_OUTPUT_DIFF[dataset][d]);
         }
     }
-
 
     public void testInsert(int dataset) {
         // 1 initiate
@@ -433,7 +456,6 @@ public class TestCase {
         // 4 print result and time
         printResult(false, leftDiffSets, totalFds, diffTimes, fdTimes);
     }
-
 
     void printResult(boolean isInsert, List<List<Long>> diffSets, List<List<List<BitSet>>> fds, List<Double> diffTimes, List<Double> fdTimes) {
         double diffTimeTotal = diffTimes.stream().reduce(0.0, Double::sum);

@@ -115,4 +115,12 @@ public class Utils {
         return minSets;
     }
 
+    public static List<Long> genEdgeRhs(int e, List<Long> edges) {
+        List<Long> edgeRhs = new ArrayList<>();
+        long mask = 1L << e;
+        for (long edge : edges)
+            if ((edge & mask) != 0) edgeRhs.add(edge & ~mask);
+        return edgeRhs;
+    }
+
 }
