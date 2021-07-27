@@ -35,6 +35,12 @@ public class TestCase {
             this.totalTime = totalTime;
         }
 
+        public RuntimeResult(RuntimeResult a, RuntimeResult b) {
+            this.diffTime = a.diffTime + b.diffTime;
+            this.hsTime = a.hsTime + b.hsTime;
+            this.totalTime = a.totalTime + b.totalTime;
+        }
+
         public double getTotalTime() {
             return totalTime;
         }
@@ -51,12 +57,25 @@ public class TestCase {
     }
 
 
-    DiffConnector initiateDiff(String baseDataFp, String baseDiffFp) {
+    DiffConnector initiateDiff(String baseDataFp) {
         // load base data
         System.out.println("  [INITIALIZING]...");
         List<List<String>> csvData = DataIO.readCsvFile(baseDataFp);
 
         // initiate pli and differenceSet
+        DiffConnector diffConnector = new DiffConnector();
+        List<Long> initDiffSets = diffConnector.generatePliAndDiff(csvData);
+        System.out.println("    # of initial Diff: " + initDiffSets.size());
+
+        return diffConnector;
+    }
+
+    DiffConnector initiateDiff(String baseDataFp, String baseDiffFp) {
+        // load base data
+        System.out.println("  [INITIALIZING]...");
+        List<List<String>> csvData = DataIO.readCsvFile(baseDataFp);
+
+        // initiate pli and differenceSet, with existing differenceSet
         DiffConnector diffConnector = new DiffConnector();
         List<Long> initDiffSets = diffConnector.generatePliAndDiff(csvData, baseDiffFp);
         System.out.println("    # of initial Diff: " + initDiffSets.size());
@@ -72,14 +91,11 @@ public class TestCase {
         return fdConnector;
     }
 
-    RuntimeResult insertThenDelete(DiffConnector diffConnector, DynHSConnector fdConnector, String isrtDataFp, String rmvdDataFp) {
+    RuntimeResult insert(DiffConnector diffConnector, DynHSConnector fdConnector, String isrtDataFp) {
         List<List<String>> insertData = isrtDataFp == null || isrtDataFp.isEmpty() ? new ArrayList<>() : DataIO.readCsvFile(isrtDataFp);
-        List<Integer> removedData = rmvdDataFp == null || rmvdDataFp.isEmpty() ? new ArrayList<>() : DataIO.readRemoveFile(rmvdDataFp);
 
-        System.out.println("  [INSERT THEN DELETE]...");
         double diffTime = 0.0, hsTime = 0.0;
-
-        if (!insertData.isEmpty()) {        // insert
+        if (!insertData.isEmpty()) {
             long startTime = System.nanoTime();
             List<Long> newDiffs = diffConnector.insertData(insertData);
             long midTime = System.nanoTime();
@@ -89,8 +105,14 @@ public class TestCase {
             diffTime += (double) (midTime - startTime) / 1000000;
             hsTime += (double) (endTime - midTime) / 1000000;
         }
+        return new RuntimeResult(diffTime, hsTime);
+    }
 
-        if (!removedData.isEmpty()) {       // delete
+    RuntimeResult delete(DiffConnector diffConnector, DynHSConnector fdConnector, String rmvdDataFp) {
+        List<Integer> removedData = rmvdDataFp == null || rmvdDataFp.isEmpty() ? new ArrayList<>() : DataIO.readRemoveFile(rmvdDataFp);
+
+        double diffTime = 0.0, hsTime = 0.0;
+        if (!removedData.isEmpty()) {
             long startTime = System.nanoTime();
             Set<Long> removedDiffs = diffConnector.removeData(removedData);
             List<Long> leftDiffs = diffConnector.getDiffSet();
@@ -101,8 +123,43 @@ public class TestCase {
             diffTime += (double) (midTime - startTime) / 1000000;
             hsTime += (double) (endTime - midTime) / 1000000;
         }
-
         return new RuntimeResult(diffTime, hsTime);
+    }
+
+    RuntimeResult deleteThenInsert(DiffConnector diffConnector, DynHSConnector fdConnector, String rmvdDataFp, String isrtDataFp) {
+        System.out.println("  [DELETE THEN INSERT]...");
+        RuntimeResult deleteTime = delete(diffConnector, fdConnector, rmvdDataFp);
+        RuntimeResult insertTime = insert(diffConnector, fdConnector, isrtDataFp);
+        return new RuntimeResult(deleteTime,insertTime);
+    }
+
+    RuntimeResult deleteThenInsert(String baseDataFp, String baseDiffFp, String rmvdDataFp, String isrtDataFp) {
+        DiffConnector diffConnector = initiateDiff(baseDataFp, baseDiffFp);
+        DynHSConnector fdConnector = initiateFd(diffConnector.nElements, diffConnector.getDiffSet());
+        return deleteThenInsert(diffConnector, fdConnector, rmvdDataFp, isrtDataFp);
+    }
+
+    List<RuntimeResult> deleteThenInsert(String baseDataFp, String baseDiffFp, String[] rmvdDataFp, String[] isrtDataFp) {
+        assert isrtDataFp.length == rmvdDataFp.length;
+
+        deleteThenInsert(baseDataFp, baseDiffFp, rmvdDataFp[0], isrtDataFp[0]);         // preheat
+
+        DiffConnector diffConnector = initiateDiff(baseDataFp, baseDiffFp);
+        DynHSConnector fdConnector = initiateFd(diffConnector.nElements, diffConnector.getDiffSet());
+
+        List<RuntimeResult> results = new ArrayList<>();
+        for (int i = 0; i < isrtDataFp.length; i++) {
+            RuntimeResult res = deleteThenInsert(diffConnector, fdConnector, isrtDataFp[i], rmvdDataFp[i]);
+            results.add(res);
+        }
+        return results;
+    }
+
+    RuntimeResult insertThenDelete(DiffConnector diffConnector, DynHSConnector fdConnector, String isrtDataFp, String rmvdDataFp) {
+        System.out.println("  [INSERT THEN DELETE]...");
+        RuntimeResult insertTime = insert(diffConnector, fdConnector, isrtDataFp);
+        RuntimeResult deleteTime = delete(diffConnector, fdConnector, rmvdDataFp);
+        return new RuntimeResult(insertTime, deleteTime);
     }
 
 
@@ -157,6 +214,12 @@ public class TestCase {
         System.out.println("  No.\tDiff Time(ms)\tHS Time(ms)\t\tKey File");
         for (int i = 0; i < results.size(); i++)
             System.out.printf("  %d\t%12.3f\t%12.3f\t\t%s\n", i, results.get(i).diffTime, results.get(i).hsTime, dataFiles[i]);
+    }
+
+    void printDiffHsTotalTimes(List<RuntimeResult> results, String[] dataFiles) {
+        System.out.println("  No.\tDiff Time(ms)\tHS Time(ms)\t\tTotal Time(ms)\t\tKey File");
+        for (int i = 0; i < results.size(); i++)
+            System.out.printf("  %d\t%12.3f\t%12.3f\t%12.3f\t\t%s\n", i, results.get(i).diffTime, results.get(i).hsTime, results.get(i).getTotalTime(), dataFiles[i]);
     }
 
     public void exp1(int d) {
@@ -328,7 +391,26 @@ public class TestCase {
         return results;
     }
 
+    public void runDHSFD(String baseDataFp, String[] deleteDataFp, String[] insertDataFp,
+                         boolean outputDiff, String outputBaseDiffFp, String[] outputUpdatedDiffFp,
+                         boolean outputFd, String outputBaseFdFp, String[] outputUpdatedFdFp) {
 
+        DiffConnector diffConnector = initiateDiff(baseDataFp);
+        DynHSConnector fdConnector = initiateFd(diffConnector.nElements, diffConnector.getDiffSet());
+        if (outputDiff) DataIO.printLongDiffMap(diffConnector, outputBaseDiffFp);
+        if (outputFd) DataIO.printFDs(fdConnector, outputBaseFdFp);
+
+        deleteThenInsert(diffConnector, fdConnector, deleteDataFp[0], insertDataFp[0]);     // preheat
+
+        List<RuntimeResult> results = new ArrayList<>();
+        for (int i = 0; i < deleteDataFp.length; i++) {
+            RuntimeResult res = deleteThenInsert(diffConnector, fdConnector, deleteDataFp[i], insertDataFp[i]);
+            results.add(res);
+            if (outputDiff) DataIO.printLongDiffMap(diffConnector, outputUpdatedDiffFp[i]);
+            if (outputFd) DataIO.printFDs(fdConnector, outputUpdatedFdFp[i]);
+        }
+        printDiffHsTotalTimes(results, deleteDataFp);
+    }
 
 
 

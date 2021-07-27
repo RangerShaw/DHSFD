@@ -328,7 +328,7 @@ public class DataFp {
     },
     };
 
-    /* DELETE */
+    // DELETE
     static String[] EXP6_REMOVE_BASE_EDGES = new String[]{
             "dataFiles/exp6/letter/letter_100.txt",
     };
@@ -356,6 +356,51 @@ public class DataFp {
     };
 
 
+    /* general execution */
+
+    static String[] BASE_DATA = new String[]{
+            "dataFiles/general/letter/letter_15000.csv",
+    };
+
+    static String[][] RMVD_DATA = new String[][]{{
+            "dataFiles/general/letter/letter_14501-15000_del.csv",
+            "dataFiles/general/letter/letter_15001-15500_del.csv",
+            "dataFiles/general/letter/letter_15501-16000_del.csv",
+    },
+    };
+
+    static String[][] ISRT_DATA = new String[][]{{
+            "dataFiles/general/letter/letter_15001-16000.csv",
+            "dataFiles/general/letter/letter_16001-17000.csv",
+            "dataFiles/general/letter/letter_17001-18000.csv",
+    },
+    };
+
+    static String[] BASE_DIFF_OUTPUT = new String[]{
+            "dataFiles/general/letter/output/letter_15000_diff.txt",
+    };
+
+    static String[] BASE_FD_OUTPUT = new String[]{
+            "dataFiles/general/letter/output/letter_15000_fd.txt",
+    };
+
+    static String[][] UPDATED_DIFF_OUTPUT = new String[][]{{
+            "dataFiles/general/letter/output/letter_15500_diff.txt",
+            "dataFiles/general/letter/output/letter_16000_diff.txt",
+            "dataFiles/general/letter/output/letter_16500_diff.txt",
+            "dataFiles/general/letter/output/letter_17000_diff.txt",
+            "dataFiles/general/letter/output/letter_17500_diff.txt",
+    },
+    };
+
+    static String[][] UPDATED_FD_OUTPUT = new String[][]{{
+            "dataFiles/general/letter/output/letter_15500_fd.txt",
+            "dataFiles/general/letter/output/letter_16000_fd.txt",
+            "dataFiles/general/letter/output/letter_16500_fd.txt",
+            "dataFiles/general/letter/output/letter_17000_fd.txt",
+            "dataFiles/general/letter/output/letter_17500_fd.txt",
+    }
+    };
 
 
 
