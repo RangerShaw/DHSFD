@@ -130,7 +130,7 @@ public class TestCase {
         System.out.println("  [DELETE THEN INSERT]...");
         RuntimeResult deleteTime = delete(diffConnector, fdConnector, rmvdDataFp);
         RuntimeResult insertTime = insert(diffConnector, fdConnector, isrtDataFp);
-        return new RuntimeResult(deleteTime,insertTime);
+        return new RuntimeResult(deleteTime, insertTime);
     }
 
     RuntimeResult deleteThenInsert(String baseDataFp, String baseDiffFp, String rmvdDataFp, String isrtDataFp) {
@@ -391,10 +391,19 @@ public class TestCase {
         return results;
     }
 
+    /**
+     * initiate DHSFD with baseData, consecutively delete and insert data.
+     *
+     * @param baseDataFp   file path of base data.
+     * @param deleteDataFp file paths of deleted data. each line in a file is the index of a tuple to be deleted
+     * @param insertDataFp file paths of inserted data. each line in a file is a tuple to be inserted
+     * @param outputDiff   if true, output base and updated different-sets to outputBaseDiffFp and outputUpdatedDiffFp, respectively
+     * @param outputFd     if true, output base and updated FDs to outputBaseFdFp and outputUpdatedFdFp, respectively
+     */
     public void runDHSFD(String baseDataFp, String[] deleteDataFp, String[] insertDataFp,
                          boolean outputDiff, String outputBaseDiffFp, String[] outputUpdatedDiffFp,
                          boolean outputFd, String outputBaseFdFp, String[] outputUpdatedFdFp) {
-
+        System.out.println("\n[Run RHSFD]");
         DiffConnector diffConnector = initiateDiff(baseDataFp);
         DynHSConnector fdConnector = initiateFd(diffConnector.nElements, diffConnector.getDiffSet());
         if (outputDiff) DataIO.printLongDiffMap(diffConnector, outputBaseDiffFp);
@@ -411,7 +420,6 @@ public class TestCase {
         }
         printDiffHsTotalTimes(results, deleteDataFp);
     }
-
 
 
     public void genDiffBF(int dataset) {
