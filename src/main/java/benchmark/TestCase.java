@@ -404,6 +404,7 @@ public class TestCase {
                          boolean outputDiff, String outputBaseDiffFp, String[] outputUpdatedDiffFp,
                          boolean outputFd, String outputBaseFdFp, String[] outputUpdatedFdFp) {
         System.out.println("\n[Run RHSFD]");
+
         DiffConnector diffConnector = initiateDiff(baseDataFp);
         DynHSConnector fdConnector = initiateFd(diffConnector.nElements, diffConnector.getDiffSet());
         if (outputDiff) DataIO.printLongDiffMap(diffConnector, outputBaseDiffFp);
@@ -420,6 +421,8 @@ public class TestCase {
         }
         printDiffHsTotalTimes(results, deleteDataFp);
     }
+
+
 
 
     public void genDiffBF(int dataset) {
