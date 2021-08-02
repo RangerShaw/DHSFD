@@ -64,6 +64,10 @@ public class DifferenceSet {
 
 
     public List<Long> insertData(List<List<List<Integer>>> pli, List<List<Integer>> inversePli) {
+        return inversePli.size() / diffSet.size() <= 500 ? insertData0(pli, inversePli) : insertData1(pli, inversePli);
+    }
+
+    List<Long> insertData0(List<List<List<Integer>>> pli, List<List<Integer>> inversePli) {
         long[] diffHash = new long[inversePli.size()];
 
         List<Long> newDiffs = new ArrayList<>();
@@ -105,23 +109,20 @@ public class DifferenceSet {
         return newDiffs;
     }
 
-    public List<Long> insertData1(List<List<List<Integer>>> pli, List<List<Integer>> inversePli) {
+    List<Long> insertData1(List<List<List<Integer>>> pli, List<List<Integer>> inversePli) {
         HashIntLongMap diffMap = HashIntLongMaps.newMutableMap();   // neighbor -> diff with it
         List<Long> newDiffs = new ArrayList<>();
         long nFullDiff = 0;
 
-        // for each newly inserted tuple, generate its diffs with all front tuples
         for (int t = nTuples; t < inversePli.size(); t++) {
             diffMap.clear();
 
-            // update pli, generate diffHash
             for (int e = 0; e < nAttributes; e++) {
                 List<List<Integer>> pliE = pli.get(e);
                 int clstId = inversePli.get(t).get(e);
 
-                if (clstId >= pliE.size())                      // new cluster
-                    pliE.add(new ArrayList<>());
-                else {                                          // existing cluster
+                if (clstId >= pliE.size()) pliE.add(new ArrayList<>());  // new cluster
+                else {                                                   // existing cluster
                     long mask = -(1L << e);
                     for (int neighbor : pliE.get(clstId))
                         diffMap.addValue(neighbor, mask, fullDiff);
@@ -130,11 +131,8 @@ public class DifferenceSet {
                 pliE.get(clstId).add(t);
             }
 
-            // generate new diff
-            for (long diff : diffMap.values()) {
-                if (diffFreq.addValue(diff, 1L, 0L) == 1L)
-                    newDiffs.add(diff);
-            }
+            for (long diff : diffMap.values())
+                if (diffFreq.addValue(diff, 1L, 0L) == 1L) newDiffs.add(diff);
 
             nFullDiff += t - diffMap.size();
         }
@@ -146,7 +144,6 @@ public class DifferenceSet {
         Utils.sortLongSets(nAttributes, diffSet);
 
         nTuples = inversePli.size();
-
         return newDiffs;
     }
 
@@ -195,6 +192,12 @@ public class DifferenceSet {
 
     public Set<Long> removeData(List<List<List<Integer>>> pli, List<List<Integer>> inversePli,
                                 List<Integer> removedData, boolean[] removed) {
+        return inversePli.size() / diffSet.size() <= 500 ?
+                removeData0(pli, inversePli, removedData, removed) :
+                removeData1(pli, inversePli, removedData, removed);
+    }
+
+    public Set<Long> removeData0(List<List<List<Integer>>> pli, List<List<Integer>> inversePli, List<Integer> removedData, boolean[] removed) {
         Set<Long> removedDiffs = new HashSet<>();
         long[] diffHash = new long[inversePli.size()];
 
@@ -220,23 +223,18 @@ public class DifferenceSet {
 
         diffSet.removeAll(removedDiffs);
         nTuples -= removed.length;
-
         return removedDiffs;
     }
 
-    public Set<Long> removeData1(List<List<List<Integer>>> pli, List<List<Integer>> inversePli,
-                                 List<Integer> removedTuples, boolean[] removed) {
+    public Set<Long> removeData1(List<List<List<Integer>>> pli, List<List<Integer>> inversePli, List<Integer> removedTuples, boolean[] removed) {
         Set<Long> removedDiffs = new HashSet<>();
         HashIntLongMap diffMap = HashIntLongMaps.newMutableMap();
         long nFullDiff = 0;
 
         for (int i = 0; i < removedTuples.size(); i++) {
             int t = removedTuples.get(i);
-
-            // reset diffHash
             diffMap.clear();
 
-            // generate diffHash
             for (int e = 0; e < nAttributes; e++) {
                 long mask = -(1L << e);
                 for (int neighbor : pli.get(e).get(inversePli.get(t).get(e))) {
@@ -245,7 +243,6 @@ public class DifferenceSet {
                 }
             }
 
-            // generate removed diff
             for (long diff : diffMap.values()) {
                 if (diffFreq.addValue(diff, -1L) == 0L) {
                     removedDiffs.add(diff);
@@ -261,7 +258,6 @@ public class DifferenceSet {
 
         diffSet.removeAll(removedDiffs);
         nTuples -= removed.length;
-
         return removedDiffs;
     }
 

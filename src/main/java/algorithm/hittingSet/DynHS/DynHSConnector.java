@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * translate FD Discovery into Hitting Set Enumeration
+ * translate FD Discovery into Hitting Set Enumeration on each RHS
  */
 public class DynHSConnector {
 

@@ -94,36 +94,30 @@ public class TestCase {
     RuntimeResult insert(DiffConnector diffConnector, DynHSConnector fdConnector, String isrtDataFp) {
         List<List<String>> insertData = isrtDataFp == null || isrtDataFp.isEmpty() ? new ArrayList<>() : DataIO.readCsvFile(isrtDataFp);
 
-        double diffTime = 0.0, hsTime = 0.0;
+        double diffTime = 0.0, totalTime = 0.0;
         if (!insertData.isEmpty()) {
             long startTime = System.nanoTime();
             List<Long> newDiffs = diffConnector.insertData(insertData);
-            long midTime = System.nanoTime();
+            diffTime = (double) (System.nanoTime() - startTime) / 1000000;
             fdConnector.insertSubsets(newDiffs);
-            long endTime = System.nanoTime();
-
-            diffTime += (double) (midTime - startTime) / 1000000;
-            hsTime += (double) (endTime - midTime) / 1000000;
+            totalTime = (double) (System.nanoTime() - startTime) / 1000000;
         }
-        return new RuntimeResult(diffTime, hsTime);
+        return new RuntimeResult(diffTime, totalTime - diffTime);
     }
 
     RuntimeResult delete(DiffConnector diffConnector, DynHSConnector fdConnector, String rmvdDataFp) {
         List<Integer> removedData = rmvdDataFp == null || rmvdDataFp.isEmpty() ? new ArrayList<>() : DataIO.readRemoveFile(rmvdDataFp);
 
-        double diffTime = 0.0, hsTime = 0.0;
+        double diffTime = 0.0, totalTime = 0.0;
         if (!removedData.isEmpty()) {
             long startTime = System.nanoTime();
             Set<Long> removedDiffs = diffConnector.removeData(removedData);
             List<Long> leftDiffs = diffConnector.getDiffSet();
-            long midTime = System.nanoTime();
+            diffTime = (double) (System.nanoTime() - startTime) / 1000000;
             fdConnector.removeSubsets(leftDiffs, removedDiffs);
-            long endTime = System.nanoTime();
-
-            diffTime += (double) (midTime - startTime) / 1000000;
-            hsTime += (double) (endTime - midTime) / 1000000;
+            totalTime = (double) (System.nanoTime() - startTime) / 1000000;
         }
-        return new RuntimeResult(diffTime, hsTime);
+        return new RuntimeResult(diffTime, totalTime - diffTime);
     }
 
     RuntimeResult deleteThenInsert(DiffConnector diffConnector, DynHSConnector fdConnector, String rmvdDataFp, String isrtDataFp) {
@@ -260,6 +254,7 @@ public class TestCase {
 
     public void exp4_delta_ri(int d) {
         System.out.println("\n[EXP 4] Varying delta r_i");
+
         List<RuntimeResult> results = new ArrayList<>();
         for (int i = 0; i < EXP4_r_INSERT_ISRT_DATA.length; i++) {
             RuntimeResult res = insertThenDelete(EXP4_r_INSERT_BASE_DATA[d][i], EXP4_r_INSERT_BASE_DIFF[d][i], EXP4_r_INSERT_ISRT_DATA[d][i], EXP4_r_REMOVE_RMVD_DATA[d][i]);
@@ -421,8 +416,6 @@ public class TestCase {
         }
         printDiffHsTotalTimes(results, deleteDataFp);
     }
-
-
 
 
     public void genDiffBF(int dataset) {
