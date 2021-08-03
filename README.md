@@ -15,15 +15,18 @@ Our experiments use a host of real-life and synthetic datasets.
 All complete datasets are included in the [zip files](https://github.com/RangerShaw/DHSFD/tree/master/dataFiles/datasets).
 
 These original data files need further transformations to fit in our experiments, which may take more space beyond the limit of Github. 
-We provide a detailed example for each experiment [here](https://github.com/RangerShaw/DHSFD/blob/master/dataFiles/dataFiles.zip), 
-and all others can be conducted following the instructions provided in the examples.
-To run DHSFD with these examples, just unzip the file and put it under directory [/dataFiles/](https://github.com/RangerShaw/DHSFD/tree/master/dataFiles), for instance, `/dataFiles/exp1/*`.
+We provide a detailed example for each experiment, including a convenient [execution entrance](https://github.com/RangerShaw/DHSFD/blob/master/src/main/java/benchmark/Benchmark.java)
+and corresponding [data files](https://github.com/RangerShaw/DHSFD/blob/master/dataFiles/dataFiles.zip).
+All experiments using different datasets can be conducted following these examples provided.
 
 ### Experiments
 
-The entrance of this program is at [Benchmark](https://github.com/RangerShaw/DHSFD/blob/master/src/main/java/benchmark/Benchmark.java).
-Direct executions are provided for each experiment, which shall work if data files are correctly placed.
+To run DHSFD with provided examples, 
 
+1. Unzip the [data files](https://github.com/RangerShaw/DHSFD/blob/master/dataFiles/dataFiles.zip)
+and put it under directory [/dataFiles/](https://github.com/RangerShaw/DHSFD/tree/master/dataFiles), for instance, `/dataFiles/exp1/*`;
+
+2. Run the experiment from the corresponding entrance in [Benchmark](https://github.com/RangerShaw/DHSFD/blob/master/src/main/java/benchmark/Benchmark.java).
 
 
 [comment]: <> (## Further Development)

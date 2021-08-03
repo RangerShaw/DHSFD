@@ -21,7 +21,7 @@ public class Benchmark {
         testCase.exp3_r(dataset);
 
         /* exp 4 */
-       testCase.exp4_delta_ri(dataset);
+        testCase.exp4_delta_ri(dataset);
         testCase.exp4_round(dataset);
 
         /* exp 6 */
