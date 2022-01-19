@@ -6,7 +6,8 @@ public class Benchmark {
 
     public static void main(String[] args) {
         TestCase testCase = new TestCase();
-        int dataset = 0;                    // one index in different experiments may refer to different datasets
+
+        int dataset = 0;                    // same index in different experiments may refer to different datasets
 
         /* exp 1 */
         testCase.exp1(dataset);
@@ -27,12 +28,6 @@ public class Benchmark {
         /* exp 6 */
         testCase.exp6_insert(dataset);
         testCase.exp6_delete(dataset);
-
-
-        /* general execution of DHSFD */
-        testCase.runDHSFD(BASE_DATA[dataset], RMVD_DATA[dataset], ISRT_DATA[dataset],
-                true, BASE_DIFF_OUTPUT[dataset], UPDATED_DIFF_OUTPUT[dataset],
-                true, BASE_FD_OUTPUT[dataset], UPDATED_FD_OUTPUT[dataset]);
     }
 
 }

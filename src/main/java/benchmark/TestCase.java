@@ -386,38 +386,6 @@ public class TestCase {
         return results;
     }
 
-    /**
-     * initiate DHSFD with baseData, consecutively delete and insert data.
-     *
-     * @param baseDataFp   file path of base data.
-     * @param deleteDataFp file paths of deleted data. each line in a file is the index of a tuple to be deleted
-     * @param insertDataFp file paths of inserted data. each line in a file is a tuple to be inserted
-     * @param outputDiff   if true, output base and updated different-sets to outputBaseDiffFp and outputUpdatedDiffFp, respectively
-     * @param outputFd     if true, output base and updated FDs to outputBaseFdFp and outputUpdatedFdFp, respectively
-     */
-    public void runDHSFD(String baseDataFp, String[] deleteDataFp, String[] insertDataFp,
-                         boolean outputDiff, String outputBaseDiffFp, String[] outputUpdatedDiffFp,
-                         boolean outputFd, String outputBaseFdFp, String[] outputUpdatedFdFp) {
-        System.out.println("\n[Run RHSFD]");
-
-        DiffConnector diffConnector = initiateDiff(baseDataFp);
-        DynHSConnector fdConnector = initiateFd(diffConnector.nElements, diffConnector.getDiffSet());
-        if (outputDiff) DataIO.printLongDiffMap(diffConnector, outputBaseDiffFp);
-        if (outputFd) DataIO.printFDs(fdConnector, outputBaseFdFp);
-
-        deleteThenInsert(diffConnector, fdConnector, deleteDataFp[0], insertDataFp[0]);     // preheat
-
-        List<RuntimeResult> results = new ArrayList<>();
-        for (int i = 0; i < deleteDataFp.length; i++) {
-            RuntimeResult res = deleteThenInsert(diffConnector, fdConnector, deleteDataFp[i], insertDataFp[i]);
-            results.add(res);
-            if (outputDiff) DataIO.printLongDiffMap(diffConnector, outputUpdatedDiffFp[i]);
-            if (outputFd) DataIO.printFDs(fdConnector, outputUpdatedFdFp[i]);
-        }
-        printDiffHsTotalTimes(results, deleteDataFp);
-    }
-
-
     public void genDiffBF(int dataset) {
         for (int d = 0, size = DIFF_INPUT_DATA[dataset].length; d < size; d++) {
             System.out.println("[INITIALIZING]...");
